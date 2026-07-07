@@ -4,7 +4,7 @@ A deal-sourcing and screening dashboard built around a specific, opinionated the
 
 **All data is fictional.** Every company, financial figure, and deal note is illustrative — built to demonstrate a sourcing/screening framework end-to-end, not to represent real targets or any employer's actual pipeline.
 
-**Live:** https://bakul007.github.io/dealsourcing/
+**Live:** https://bakulbadwal.github.io/dealsourcing/
 
 ![Dashboard screenshot](docs/screenshot.png)
 
@@ -22,12 +22,12 @@ The visual language is deliberately terminal-inspired — monospace numerals, ha
 
 ## Architecture
 
-Same data/view split as [the AI Stack](https://github.com/bakul007/aistack): `data.json` holds every deal, the framework definition, and the thesis copy; `app.js` renders it and runs the scoring engine; `styles.css` handles presentation. A sourcing pipeline is exactly the kind of content that should be able to update independently of the render logic.
+Same data/view split as [the AI Stack](https://github.com/bakulbadwal/aistack): `data.json` holds every deal, the framework definition, and the thesis copy; `app.js` renders it and runs the scoring engine; `styles.css` handles presentation. A sourcing pipeline is exactly the kind of content that should be able to update independently of the render logic.
 
 ## Running locally
 
 ```
-git clone https://github.com/bakul007/dealsourcing.git
+git clone https://github.com/bakulbadwal/dealsourcing.git
 cd dealsourcing
 python3 -m http.server 8000
 ```
