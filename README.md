@@ -4,6 +4,8 @@ A deal-sourcing and screening dashboard built around a specific, opinionated the
 
 **All data is fictional.** Every company, financial figure, and deal note is illustrative — built to demonstrate a sourcing/screening framework end-to-end, not to represent real targets or any employer's actual pipeline.
 
+**Live:** https://bakul007.github.io/dealsourcing/
+
 ![Dashboard screenshot](docs/screenshot.png)
 
 **Open it:** clone the repo and run a local static server (see below) — the app fetches `data.json`, which browsers block over `file://`.
