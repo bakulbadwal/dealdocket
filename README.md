@@ -1,10 +1,10 @@
-# The Sourcing Screen — AI-Enabled Roll-Up Dashboard
+# Deal Docket — AI-Enabled Roll-Up Dashboard
 
 A deal-sourcing and screening dashboard built around a specific, opinionated thesis: PE doesn't play well at the AI labs/compute layer — it plays in the fragmented, already-profitable SMB service businesses (bookkeeping, IT support, medical billing, home services) where AI is a margin lever on an existing cash-flow base, not the product itself.
 
 **All data is fictional.** Every company, financial figure, and deal note is solely illustrative — built to demonstrate a sourcing/screening framework end-to-end, not to represent real targets.
 
-**Live:** https://bakulbadwal.github.io/dealsourcing/
+**Live:** https://bakulbadwal.github.io/dealdocket/
 
 ![Dashboard screenshot](docs/screenshot.png)
 
@@ -27,8 +27,8 @@ Same data/view split as [the AI Stack](https://github.com/bakulbadwal/aistack): 
 ## Running locally
 
 ```
-git clone https://github.com/bakulbadwal/dealsourcing.git
-cd dealsourcing
+git clone https://github.com/bakulbadwal/dealdocket.git
+cd dealdocket
 python3 -m http.server 8000
 ```
 
