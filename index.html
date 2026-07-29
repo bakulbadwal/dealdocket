@@ -45,6 +45,51 @@
   <div class="presets-row" id="presetsRoot"></div>
   <div class="framework-grid" id="frameworkRoot"></div>
 
+  <div class="section-title">Roll-up builder — the thesis, priced</div>
+  <p class="section-note" id="rollupIntro">
+    Screening ranks targets. It doesn't show why the strategy makes money. Pick a platform and
+    its add-ons below, then move the two assumptions: the value bridge separates what you earn
+    from buying small and selling big, from what you earn by actually applying AI to the cost base.
+  </p>
+  <div class="rollup" id="rollupRoot">
+    <div class="rollup-picker">
+      <div class="rollup-picker-head">
+        <span class="rollup-picker-title">Selected</span>
+        <button type="button" class="rollup-clear" id="rollupClear">Clear</button>
+      </div>
+      <div class="rollup-chips" id="rollupChips"></div>
+      <p class="rollup-hint">Use <span class="rollup-hint-key">+</span> in the pipeline to add a deal. Click a chip to make it the platform.</p>
+
+      <div class="rollup-assumption">
+        <div class="rollup-assumption-head">
+          <label for="captureSlider">AI cost capture</label>
+          <span class="rollup-assumption-val" id="captureVal">30%</span>
+        </div>
+        <input type="range" id="captureSlider" min="0" max="100" value="30" step="5">
+        <p class="rollup-assumption-desc" id="captureDesc"></p>
+      </div>
+
+      <div class="rollup-assumption">
+        <div class="rollup-assumption-head">
+          <label for="organicSlider">Organic EBITDA growth to exit</label>
+          <span class="rollup-assumption-val" id="organicVal">12%</span>
+        </div>
+        <input type="range" id="organicSlider" min="0" max="60" value="12" step="2">
+      </div>
+
+      <div class="rollup-assumption">
+        <div class="rollup-assumption-head">
+          <label for="exitSlider">Exit multiple</label>
+          <span class="rollup-assumption-val" id="exitVal">—</span>
+        </div>
+        <input type="range" id="exitSlider" min="30" max="120" value="60" step="1">
+        <p class="rollup-assumption-desc" id="exitDesc"></p>
+      </div>
+    </div>
+
+    <div class="rollup-output" id="rollupOutput"></div>
+  </div>
+
   <div class="section-title">Pipeline</div>
   <div class="controls-bar">
     <input type="text" id="searchInput" placeholder="Search name, vertical, location...">
@@ -65,6 +110,7 @@
   <table class="pipeline-table">
     <thead>
       <tr>
+        <th class="col-pick"><span class="sr-only">Add to roll-up</span></th>
         <th>Deal</th>
         <th>Stage</th>
         <th>Channel</th>

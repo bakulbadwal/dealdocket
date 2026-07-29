@@ -11,15 +11,54 @@
   },
   "framework": {
     "criteria": [
-      { "key": "fragmentation", "label": "Market Fragmentation", "short": "Fragmentation", "description": "How many similar operators exist in the target's geography and niche, and how much of the market is still unconsolidated — the raw runway for a roll-up." },
-      { "key": "unitEconomics", "label": "Unit Economics", "short": "Unit Economics", "description": "EBITDA margin quality, cash conversion, and revenue durability — the underwriting case independent of any AI story." },
-      { "key": "aiLeverage", "label": "AI-Adoption Leverage", "short": "AI Leverage", "description": "How much margin AI can realistically unlock in this specific workflow — the thesis-specific multiplier, not a generic \"add AI\" hand-wave." },
-      { "key": "moat", "label": "Moat & Stickiness", "short": "Moat", "description": "Contract structure, switching costs, and data lock-in that protect the business — and the roll-up — once AI raises the bar for competitors too." },
-      { "key": "exitPath", "label": "Exit Path", "short": "Exit Path", "description": "Whether this is a platform asset that re-rates the whole roll-up, or an accretive bolt-on — and how comparable multiples are trending." }
+      {
+        "key": "fragmentation",
+        "label": "Market Fragmentation",
+        "short": "Fragmentation",
+        "description": "How many similar operators exist in the target's geography and niche, and how much of the market is still unconsolidated — the raw runway for a roll-up."
+      },
+      {
+        "key": "unitEconomics",
+        "label": "Unit Economics",
+        "short": "Unit Economics",
+        "description": "EBITDA margin quality, cash conversion, and revenue durability — the underwriting case independent of any AI story."
+      },
+      {
+        "key": "aiLeverage",
+        "label": "AI-Adoption Leverage",
+        "short": "AI Leverage",
+        "description": "How much margin AI can realistically unlock in this specific workflow — the thesis-specific multiplier, not a generic \"add AI\" hand-wave."
+      },
+      {
+        "key": "moat",
+        "label": "Moat & Stickiness",
+        "short": "Moat",
+        "description": "Contract structure, switching costs, and data lock-in that protect the business — and the roll-up — once AI raises the bar for competitors too."
+      },
+      {
+        "key": "exitPath",
+        "label": "Exit Path",
+        "short": "Exit Path",
+        "description": "Whether this is a platform asset that re-rates the whole roll-up, or an accretive bolt-on — and how comparable multiples are trending."
+      }
     ]
   },
-  "stages": ["Sourced", "Screening", "IOI", "LOI", "Diligence", "Closed", "Passed"],
-  "channels": ["Broker", "Direct Outreach", "Marketplace", "Referral", "Inbound"],
+  "stages": [
+    "Sourced",
+    "Screening",
+    "IOI",
+    "LOI",
+    "Diligence",
+    "Closed",
+    "Passed"
+  ],
+  "channels": [
+    "Broker",
+    "Direct Outreach",
+    "Marketplace",
+    "Referral",
+    "Inbound"
+  ],
   "verticals": [
     "IT Managed Services",
     "Bookkeeping & Accounting",
@@ -34,10 +73,20 @@
   ],
   "deals": [
     {
-      "id": "d01", "name": "Cascade IT Partners", "vertical": "IT Managed Services", "location": "Denver, CO",
-      "stage": "Diligence", "channel": "Broker", "sourcedDate": "2026-02-03",
-      "revenue": "$6.1M", "ebitda": "$1.3M", "ebitdaMargin": "21.3%",
-      "scores": { "fragmentation": 4, "unitEconomics": 4, "aiLeverage": 5, "moat": 3, "exitPath": 4 },
+      "id": "d01",
+      "name": "Cascade IT Partners",
+      "vertical": "IT Managed Services",
+      "location": "Denver, CO",
+      "stage": "Diligence",
+      "channel": "Broker",
+      "sourcedDate": "2026-02-03",
+      "scores": {
+        "fragmentation": 4,
+        "unitEconomics": 4,
+        "aiLeverage": 5,
+        "moat": 3,
+        "exitPath": 4
+      },
       "rationale": {
         "fragmentation": "Regional MSP market with 40+ sub-scale competitors under $10M revenue — wide consolidation runway.",
         "unitEconomics": "21% EBITDA margin with 92% recurring-contract revenue.",
@@ -45,13 +94,29 @@
         "moat": "Multi-year MSAs but low switching costs once a contract lapses.",
         "exitPath": "Strong platform candidate — anchor asset for a regional MSP roll-up."
       },
-      "thesisNote": "Lead candidate for the platform slot; diligence focused on customer concentration (top 5 = 38% of revenue)."
+      "thesisNote": "Lead candidate for the platform slot; diligence focused on customer concentration (top 5 = 38% of revenue).",
+      "revenueUsd": 6100000,
+      "ebitdaUsd": 1300000,
+      "entryMultiple": 4.27,
+      "askPriceUsd": 5550000,
+      "employees": 34,
+      "recurringPct": 87
     },
     {
-      "id": "d02", "name": "Northgate Networks", "vertical": "IT Managed Services", "location": "Columbus, OH",
-      "stage": "Screening", "channel": "Marketplace", "sourcedDate": "2026-04-11",
-      "revenue": "$2.8M", "ebitda": "$410K", "ebitdaMargin": "14.6%",
-      "scores": { "fragmentation": 4, "unitEconomics": 2, "aiLeverage": 4, "moat": 2, "exitPath": 3 },
+      "id": "d02",
+      "name": "Northgate Networks",
+      "vertical": "IT Managed Services",
+      "location": "Columbus, OH",
+      "stage": "Screening",
+      "channel": "Marketplace",
+      "sourcedDate": "2026-04-11",
+      "scores": {
+        "fragmentation": 4,
+        "unitEconomics": 2,
+        "aiLeverage": 4,
+        "moat": 2,
+        "exitPath": 3
+      },
       "rationale": {
         "fragmentation": "Same fragmented metro market as most sub-$5M MSPs.",
         "unitEconomics": "Margin thin for the vertical — largely project (non-recurring) revenue mix.",
@@ -59,13 +124,29 @@
         "moat": "Month-to-month contracts, no lock-in.",
         "exitPath": "Bolt-on at best; not platform-grade on its own."
       },
-      "thesisNote": "Only proceed as a bolt-on under an existing platform, not standalone."
+      "thesisNote": "Only proceed as a bolt-on under an existing platform, not standalone.",
+      "revenueUsd": 2800000,
+      "ebitdaUsd": 410000,
+      "entryMultiple": 3.45,
+      "askPriceUsd": 1400000,
+      "employees": 16,
+      "recurringPct": 81
     },
     {
-      "id": "d03", "name": "Anchor Point IT", "vertical": "IT Managed Services", "location": "Tampa, FL",
-      "stage": "Passed", "channel": "Direct Outreach", "sourcedDate": "2026-01-22",
-      "revenue": "$1.9M", "ebitda": "$150K", "ebitdaMargin": "7.9%",
-      "scores": { "fragmentation": 3, "unitEconomics": 1, "aiLeverage": 3, "moat": 1, "exitPath": 2 },
+      "id": "d03",
+      "name": "Anchor Point IT",
+      "vertical": "IT Managed Services",
+      "location": "Tampa, FL",
+      "stage": "Passed",
+      "channel": "Direct Outreach",
+      "sourcedDate": "2026-01-22",
+      "scores": {
+        "fragmentation": 3,
+        "unitEconomics": 1,
+        "aiLeverage": 3,
+        "moat": 1,
+        "exitPath": 2
+      },
       "rationale": {
         "fragmentation": "Fragmented market, but too small to move the needle alone.",
         "unitEconomics": "Sub-8% margin and one customer at 61% of revenue.",
@@ -73,13 +154,29 @@
         "moat": "No contracts — pure handshake relationships.",
         "exitPath": "No credible path to platform or attractive bolt-on economics."
       },
-      "thesisNote": "Passed — customer concentration and margin both fail the screen independent of AI story."
+      "thesisNote": "Passed — customer concentration and margin both fail the screen independent of AI story.",
+      "revenueUsd": 1900000,
+      "ebitdaUsd": 150000,
+      "entryMultiple": 3.1,
+      "askPriceUsd": 450000,
+      "employees": 11,
+      "recurringPct": 78
     },
     {
-      "id": "d04", "name": "Ridgeline Bookkeeping Partners", "vertical": "Bookkeeping & Accounting", "location": "Boise, ID",
-      "stage": "LOI", "channel": "Broker", "sourcedDate": "2025-11-14",
-      "revenue": "$3.4M", "ebitda": "$910K", "ebitdaMargin": "26.8%",
-      "scores": { "fragmentation": 5, "unitEconomics": 5, "aiLeverage": 5, "moat": 3, "exitPath": 5 },
+      "id": "d04",
+      "name": "Ridgeline Bookkeeping Partners",
+      "vertical": "Bookkeeping & Accounting",
+      "location": "Boise, ID",
+      "stage": "LOI",
+      "channel": "Broker",
+      "sourcedDate": "2025-11-14",
+      "scores": {
+        "fragmentation": 5,
+        "unitEconomics": 5,
+        "aiLeverage": 5,
+        "moat": 3,
+        "exitPath": 5
+      },
       "rationale": {
         "fragmentation": "Bookkeeping is one of the most fragmented SMB service categories in the country.",
         "unitEconomics": "27% margin, 96% recurring monthly retainers, near-zero bad debt.",
@@ -87,13 +184,29 @@
         "moat": "Retainer relationships are sticky in practice, though contractually thin.",
         "exitPath": "Best platform candidate sourced to date — category leader multiple on exit."
       },
-      "thesisNote": "Top-ranked deal in the pipeline. LOI signed; targeting close in Q4."
+      "thesisNote": "Top-ranked deal in the pipeline. LOI signed; targeting close in Q4.",
+      "revenueUsd": 3400000,
+      "ebitdaUsd": 910000,
+      "entryMultiple": 4.32,
+      "askPriceUsd": 3950000,
+      "employees": 31,
+      "recurringPct": 94
     },
     {
-      "id": "d05", "name": "Harborview Accounting Group", "vertical": "Bookkeeping & Accounting", "location": "Providence, RI",
-      "stage": "Sourced", "channel": "Referral", "sourcedDate": "2026-05-02",
-      "revenue": "$2.1M", "ebitda": "$480K", "ebitdaMargin": "22.9%",
-      "scores": { "fragmentation": 4, "unitEconomics": 4, "aiLeverage": 4, "moat": 3, "exitPath": 3 },
+      "id": "d05",
+      "name": "Harborview Accounting Group",
+      "vertical": "Bookkeeping & Accounting",
+      "location": "Providence, RI",
+      "stage": "Sourced",
+      "channel": "Referral",
+      "sourcedDate": "2026-05-02",
+      "scores": {
+        "fragmentation": 4,
+        "unitEconomics": 4,
+        "aiLeverage": 4,
+        "moat": 3,
+        "exitPath": 3
+      },
       "rationale": {
         "fragmentation": "Dense regional market, similar dynamics to Ridgeline.",
         "unitEconomics": "Healthy margin, slightly smaller scale.",
@@ -101,13 +214,29 @@
         "moat": "Long-tenured client base, informal but sticky.",
         "exitPath": "Solid bolt-on under a bookkeeping platform."
       },
-      "thesisNote": "Natural bolt-on once Ridgeline closes — same vertical, adjacent geography."
+      "thesisNote": "Natural bolt-on once Ridgeline closes — same vertical, adjacent geography.",
+      "revenueUsd": 2100000,
+      "ebitdaUsd": 480000,
+      "entryMultiple": 3.7,
+      "askPriceUsd": 1800000,
+      "employees": 19,
+      "recurringPct": 91
     },
     {
-      "id": "d06", "name": "Fieldstone CPA Services", "vertical": "Bookkeeping & Accounting", "location": "Wichita, KS",
-      "stage": "IOI", "channel": "Broker", "sourcedDate": "2026-03-19",
-      "revenue": "$5.0M", "ebitda": "$1.05M", "ebitdaMargin": "21.0%",
-      "scores": { "fragmentation": 4, "unitEconomics": 4, "aiLeverage": 3, "moat": 4, "exitPath": 4 },
+      "id": "d06",
+      "name": "Fieldstone CPA Services",
+      "vertical": "Bookkeeping & Accounting",
+      "location": "Wichita, KS",
+      "stage": "IOI",
+      "channel": "Broker",
+      "sourcedDate": "2026-03-19",
+      "scores": {
+        "fragmentation": 4,
+        "unitEconomics": 4,
+        "aiLeverage": 3,
+        "moat": 4,
+        "exitPath": 4
+      },
       "rationale": {
         "fragmentation": "Large fragmented Midwest market.",
         "unitEconomics": "Strong margin at meaningful scale.",
@@ -115,13 +244,29 @@
         "moat": "Engagement letters renew annually with high retention.",
         "exitPath": "Credible second platform if Ridgeline's geography doesn't extend this far."
       },
-      "thesisNote": "IOI sent; evaluating as a second regional platform vs. bolt-on."
+      "thesisNote": "IOI sent; evaluating as a second regional platform vs. bolt-on.",
+      "revenueUsd": 5000000,
+      "ebitdaUsd": 1050000,
+      "entryMultiple": 4.38,
+      "askPriceUsd": 4600000,
+      "employees": 45,
+      "recurringPct": 91
     },
     {
-      "id": "d07", "name": "Lumen Creative Group", "vertical": "Marketing & Creative Agencies", "location": "Austin, TX",
-      "stage": "Screening", "channel": "Inbound", "sourcedDate": "2026-04-28",
-      "revenue": "$4.6M", "ebitda": "$690K", "ebitdaMargin": "15.0%",
-      "scores": { "fragmentation": 3, "unitEconomics": 3, "aiLeverage": 3, "moat": 2, "exitPath": 2 },
+      "id": "d07",
+      "name": "Lumen Creative Group",
+      "vertical": "Marketing & Creative Agencies",
+      "location": "Austin, TX",
+      "stage": "Screening",
+      "channel": "Inbound",
+      "sourcedDate": "2026-04-28",
+      "scores": {
+        "fragmentation": 3,
+        "unitEconomics": 3,
+        "aiLeverage": 3,
+        "moat": 2,
+        "exitPath": 2
+      },
       "rationale": {
         "fragmentation": "Agencies are fragmented, but differentiation is mostly reputational, not structural.",
         "unitEconomics": "Mid-teens margin, typical for the category.",
@@ -129,13 +274,29 @@
         "moat": "Relationship-driven, minimal contractual lock-in.",
         "exitPath": "Key-person risk caps multiple; agency roll-ups have a mixed track record."
       },
-      "thesisNote": "Watching, not pursuing — AI is double-edged here, not a clean lever."
+      "thesisNote": "Watching, not pursuing — AI is double-edged here, not a clean lever.",
+      "revenueUsd": 4600000,
+      "ebitdaUsd": 690000,
+      "entryMultiple": 3.35,
+      "askPriceUsd": 2300000,
+      "employees": 33,
+      "recurringPct": 38
     },
     {
-      "id": "d08", "name": "Brightline Digital", "vertical": "Marketing & Creative Agencies", "location": "Raleigh, NC",
-      "stage": "Passed", "channel": "Marketplace", "sourcedDate": "2026-02-17",
-      "revenue": "$1.2M", "ebitda": "$80K", "ebitdaMargin": "6.7%",
-      "scores": { "fragmentation": 3, "unitEconomics": 1, "aiLeverage": 2, "moat": 1, "exitPath": 1 },
+      "id": "d08",
+      "name": "Brightline Digital",
+      "vertical": "Marketing & Creative Agencies",
+      "location": "Raleigh, NC",
+      "stage": "Passed",
+      "channel": "Marketplace",
+      "sourcedDate": "2026-02-17",
+      "scores": {
+        "fragmentation": 3,
+        "unitEconomics": 1,
+        "aiLeverage": 2,
+        "moat": 1,
+        "exitPath": 1
+      },
       "rationale": {
         "fragmentation": "Same fragmented agency landscape.",
         "unitEconomics": "Sub-7% margin, founder-dependent pricing.",
@@ -143,13 +304,29 @@
         "moat": "No contracts, monthly churn.",
         "exitPath": "No platform or bolt-on case at this size and margin."
       },
-      "thesisNote": "Passed — textbook example of AI eroding the exact service being sold."
+      "thesisNote": "Passed — textbook example of AI eroding the exact service being sold.",
+      "revenueUsd": 1200000,
+      "ebitdaUsd": 80000,
+      "entryMultiple": 3.1,
+      "askPriceUsd": 250000,
+      "employees": 9,
+      "recurringPct": 32
     },
     {
-      "id": "d09", "name": "Foundry Brand Partners", "vertical": "Marketing & Creative Agencies", "location": "Minneapolis, MN",
-      "stage": "Sourced", "channel": "Direct Outreach", "sourcedDate": "2026-05-20",
-      "revenue": "$3.0M", "ebitda": "$510K", "ebitdaMargin": "17.0%",
-      "scores": { "fragmentation": 3, "unitEconomics": 3, "aiLeverage": 3, "moat": 2, "exitPath": 3 },
+      "id": "d09",
+      "name": "Foundry Brand Partners",
+      "vertical": "Marketing & Creative Agencies",
+      "location": "Minneapolis, MN",
+      "stage": "Sourced",
+      "channel": "Direct Outreach",
+      "sourcedDate": "2026-05-20",
+      "scores": {
+        "fragmentation": 3,
+        "unitEconomics": 3,
+        "aiLeverage": 3,
+        "moat": 2,
+        "exitPath": 3
+      },
       "rationale": {
         "fragmentation": "Fragmented, mid-size regional player.",
         "unitEconomics": "Above-average margin for an agency.",
@@ -157,13 +334,29 @@
         "moat": "A few multi-year retainer clients provide partial stability.",
         "exitPath": "Only a bolt-on candidate, and a marginal one."
       },
-      "thesisNote": "Low priority — sourced opportunistically, not pursuing actively."
+      "thesisNote": "Low priority — sourced opportunistically, not pursuing actively.",
+      "revenueUsd": 3000000,
+      "ebitdaUsd": 510000,
+      "entryMultiple": 3.49,
+      "askPriceUsd": 1800000,
+      "employees": 21,
+      "recurringPct": 38
     },
     {
-      "id": "d10", "name": "Summit Home Services", "vertical": "Home Services", "location": "Salt Lake City, UT",
-      "stage": "Diligence", "channel": "Broker", "sourcedDate": "2026-01-09",
-      "revenue": "$8.2M", "ebitda": "$1.64M", "ebitdaMargin": "20.0%",
-      "scores": { "fragmentation": 5, "unitEconomics": 4, "aiLeverage": 3, "moat": 4, "exitPath": 5 },
+      "id": "d10",
+      "name": "Summit Home Services",
+      "vertical": "Home Services",
+      "location": "Salt Lake City, UT",
+      "stage": "Diligence",
+      "channel": "Broker",
+      "sourcedDate": "2026-01-09",
+      "scores": {
+        "fragmentation": 5,
+        "unitEconomics": 4,
+        "aiLeverage": 3,
+        "moat": 4,
+        "exitPath": 5
+      },
       "rationale": {
         "fragmentation": "HVAC/plumbing is the archetypal fragmented roll-up category — thousands of owner-operators nationally.",
         "unitEconomics": "20% margin with strong recurring maintenance-contract revenue.",
@@ -171,13 +364,29 @@
         "moat": "Long-tenured maintenance contracts and strong local brand density.",
         "exitPath": "Textbook home-services platform — well-precedented roll-up category with reliable multiple expansion."
       },
-      "thesisNote": "Second platform slot; diligence nearly complete, financing being finalized."
+      "thesisNote": "Second platform slot; diligence nearly complete, financing being finalized.",
+      "revenueUsd": 8200000,
+      "ebitdaUsd": 1640000,
+      "entryMultiple": 4.85,
+      "askPriceUsd": 7950000,
+      "employees": 63,
+      "recurringPct": 33
     },
     {
-      "id": "d11", "name": "GreenAcre Landscaping", "vertical": "Home Services", "location": "Charlotte, NC",
-      "stage": "Screening", "channel": "Referral", "sourcedDate": "2026-04-06",
-      "revenue": "$3.1M", "ebitda": "$520K", "ebitdaMargin": "16.8%",
-      "scores": { "fragmentation": 4, "unitEconomics": 3, "aiLeverage": 3, "moat": 3, "exitPath": 3 },
+      "id": "d11",
+      "name": "GreenAcre Landscaping",
+      "vertical": "Home Services",
+      "location": "Charlotte, NC",
+      "stage": "Screening",
+      "channel": "Referral",
+      "sourcedDate": "2026-04-06",
+      "scores": {
+        "fragmentation": 4,
+        "unitEconomics": 3,
+        "aiLeverage": 3,
+        "moat": 3,
+        "exitPath": 3
+      },
       "rationale": {
         "fragmentation": "Highly fragmented, seasonal category.",
         "unitEconomics": "Margin depressed by seasonality and equipment capex.",
@@ -185,13 +394,29 @@
         "moat": "Recurring seasonal contracts provide some stickiness.",
         "exitPath": "Reasonable bolt-on under Summit's platform if geographies align."
       },
-      "thesisNote": "Evaluating as a bolt-on to Summit rather than standalone."
+      "thesisNote": "Evaluating as a bolt-on to Summit rather than standalone.",
+      "revenueUsd": 3100000,
+      "ebitdaUsd": 520000,
+      "entryMultiple": 3.72,
+      "askPriceUsd": 1950000,
+      "employees": 24,
+      "recurringPct": 30
     },
     {
-      "id": "d12", "name": "BluePeak Plumbing & Air", "vertical": "Home Services", "location": "Sacramento, CA",
-      "stage": "Closed", "channel": "Broker", "sourcedDate": "2025-08-30",
-      "revenue": "$5.5M", "ebitda": "$1.1M", "ebitdaMargin": "20.0%",
-      "scores": { "fragmentation": 4, "unitEconomics": 4, "aiLeverage": 4, "moat": 4, "exitPath": 4 },
+      "id": "d12",
+      "name": "BluePeak Plumbing & Air",
+      "vertical": "Home Services",
+      "location": "Sacramento, CA",
+      "stage": "Closed",
+      "channel": "Broker",
+      "sourcedDate": "2025-08-30",
+      "scores": {
+        "fragmentation": 4,
+        "unitEconomics": 4,
+        "aiLeverage": 4,
+        "moat": 4,
+        "exitPath": 4
+      },
       "rationale": {
         "fragmentation": "Fragmented West Coast metro market.",
         "unitEconomics": "Consistent 20% margin over three years of financials.",
@@ -199,13 +424,29 @@
         "moat": "Membership-style maintenance plans drive repeat revenue.",
         "exitPath": "First platform closed in the vertical — now the integration template for future bolt-ons."
       },
-      "thesisNote": "Closed. Now the reference case for underwriting future home-services deals."
+      "thesisNote": "Closed. Now the reference case for underwriting future home-services deals.",
+      "revenueUsd": 5500000,
+      "ebitdaUsd": 1100000,
+      "entryMultiple": 4.4,
+      "askPriceUsd": 4850000,
+      "employees": 42,
+      "recurringPct": 33
     },
     {
-      "id": "d13", "name": "Vantage Staffing Solutions", "vertical": "Staffing & Recruiting", "location": "Indianapolis, IN",
-      "stage": "Sourced", "channel": "Marketplace", "sourcedDate": "2026-05-11",
-      "revenue": "$9.5M", "ebitda": "$950K", "ebitdaMargin": "10.0%",
-      "scores": { "fragmentation": 3, "unitEconomics": 2, "aiLeverage": 4, "moat": 2, "exitPath": 2 },
+      "id": "d13",
+      "name": "Vantage Staffing Solutions",
+      "vertical": "Staffing & Recruiting",
+      "location": "Indianapolis, IN",
+      "stage": "Sourced",
+      "channel": "Marketplace",
+      "sourcedDate": "2026-05-11",
+      "scores": {
+        "fragmentation": 3,
+        "unitEconomics": 2,
+        "aiLeverage": 4,
+        "moat": 2,
+        "exitPath": 2
+      },
       "rationale": {
         "fragmentation": "Fragmented, but large national players compete aggressively on price.",
         "unitEconomics": "Thin staffing-industry margin, revenue-quality concerns from a few large accounts.",
@@ -213,13 +454,29 @@
         "moat": "Client contracts renew annually but are frequently rebid.",
         "exitPath": "Margin has to improve materially before this is more than a watch-list name."
       },
-      "thesisNote": "Interesting AI-leverage story, but underwriting doesn't clear on margin yet."
+      "thesisNote": "Interesting AI-leverage story, but underwriting doesn't clear on margin yet.",
+      "revenueUsd": 9500000,
+      "ebitdaUsd": 950000,
+      "entryMultiple": 3.46,
+      "askPriceUsd": 3300000,
+      "employees": 48,
+      "recurringPct": 39
     },
     {
-      "id": "d14", "name": "Crosswinds Recruiting", "vertical": "Staffing & Recruiting", "location": "Kansas City, MO",
-      "stage": "IOI", "channel": "Broker", "sourcedDate": "2026-03-25",
-      "revenue": "$4.4M", "ebitda": "$660K", "ebitdaMargin": "15.0%",
-      "scores": { "fragmentation": 3, "unitEconomics": 3, "aiLeverage": 4, "moat": 2, "exitPath": 3 },
+      "id": "d14",
+      "name": "Crosswinds Recruiting",
+      "vertical": "Staffing & Recruiting",
+      "location": "Kansas City, MO",
+      "stage": "IOI",
+      "channel": "Broker",
+      "sourcedDate": "2026-03-25",
+      "scores": {
+        "fragmentation": 3,
+        "unitEconomics": 3,
+        "aiLeverage": 4,
+        "moat": 2,
+        "exitPath": 3
+      },
       "rationale": {
         "fragmentation": "Fragmented specialty-recruiting niche.",
         "unitEconomics": "Above-average margin for staffing given a specialty focus.",
@@ -227,13 +484,29 @@
         "moat": "Specialty expertise provides some differentiation, but relationships still walk out the door with recruiters.",
         "exitPath": "Reasonable bolt-on candidate; not platform-scale alone."
       },
-      "thesisNote": "IOI sent; likely bolt-on rather than a standalone platform."
+      "thesisNote": "IOI sent; likely bolt-on rather than a standalone platform.",
+      "revenueUsd": 4400000,
+      "ebitdaUsd": 660000,
+      "entryMultiple": 3.56,
+      "askPriceUsd": 2350000,
+      "employees": 22,
+      "recurringPct": 42
     },
     {
-      "id": "d15", "name": "Pinnacle Workforce Group", "vertical": "Staffing & Recruiting", "location": "Memphis, TN",
-      "stage": "Passed", "channel": "Direct Outreach", "sourcedDate": "2026-02-08",
-      "revenue": "$2.0M", "ebitda": "$120K", "ebitdaMargin": "6.0%",
-      "scores": { "fragmentation": 2, "unitEconomics": 1, "aiLeverage": 3, "moat": 1, "exitPath": 1 },
+      "id": "d15",
+      "name": "Pinnacle Workforce Group",
+      "vertical": "Staffing & Recruiting",
+      "location": "Memphis, TN",
+      "stage": "Passed",
+      "channel": "Direct Outreach",
+      "sourcedDate": "2026-02-08",
+      "scores": {
+        "fragmentation": 2,
+        "unitEconomics": 1,
+        "aiLeverage": 3,
+        "moat": 1,
+        "exitPath": 1
+      },
       "rationale": {
         "fragmentation": "Commoditized light-industrial staffing, dominated by a few large regional players.",
         "unitEconomics": "Sub-industry-average margin with high customer turnover.",
@@ -241,13 +514,29 @@
         "moat": "No differentiation versus larger competitors.",
         "exitPath": "No credible platform or bolt-on economics."
       },
-      "thesisNote": "Passed — commoditized segment, scale favors incumbents."
+      "thesisNote": "Passed — commoditized segment, scale favors incumbents.",
+      "revenueUsd": 2000000,
+      "ebitdaUsd": 120000,
+      "entryMultiple": 3.1,
+      "askPriceUsd": 350000,
+      "employees": 10,
+      "recurringPct": 36
     },
     {
-      "id": "d16", "name": "Meridian Legal Support", "vertical": "Legal Back-Office", "location": "Cleveland, OH",
-      "stage": "LOI", "channel": "Referral", "sourcedDate": "2025-12-01",
-      "revenue": "$3.8M", "ebitda": "$950K", "ebitdaMargin": "25.0%",
-      "scores": { "fragmentation": 4, "unitEconomics": 5, "aiLeverage": 5, "moat": 4, "exitPath": 4 },
+      "id": "d16",
+      "name": "Meridian Legal Support",
+      "vertical": "Legal Back-Office",
+      "location": "Cleveland, OH",
+      "stage": "LOI",
+      "channel": "Referral",
+      "sourcedDate": "2025-12-01",
+      "scores": {
+        "fragmentation": 4,
+        "unitEconomics": 5,
+        "aiLeverage": 5,
+        "moat": 4,
+        "exitPath": 4
+      },
       "rationale": {
         "fragmentation": "Regional legal-support services remain highly fragmented outside the national e-discovery giants.",
         "unitEconomics": "25% margin with multi-year law-firm contracts.",
@@ -255,13 +544,29 @@
         "moat": "Law-firm switching costs are high once workflows are integrated.",
         "exitPath": "Strong platform candidate for a legal-support roll-up."
       },
-      "thesisNote": "LOI signed; the clearest AI-leverage-meets-moat combination in the pipeline."
+      "thesisNote": "LOI signed; the clearest AI-leverage-meets-moat combination in the pipeline.",
+      "revenueUsd": 3800000,
+      "ebitdaUsd": 950000,
+      "entryMultiple": 4.34,
+      "askPriceUsd": 4100000,
+      "employees": 40,
+      "recurringPct": 78
     },
     {
-      "id": "d17", "name": "Sterling Paralegal Partners", "vertical": "Legal Back-Office", "location": "Richmond, VA",
-      "stage": "Sourced", "channel": "Broker", "sourcedDate": "2026-04-30",
-      "revenue": "$2.4M", "ebitda": "$530K", "ebitdaMargin": "22.0%",
-      "scores": { "fragmentation": 4, "unitEconomics": 4, "aiLeverage": 4, "moat": 3, "exitPath": 3 },
+      "id": "d17",
+      "name": "Sterling Paralegal Partners",
+      "vertical": "Legal Back-Office",
+      "location": "Richmond, VA",
+      "stage": "Sourced",
+      "channel": "Broker",
+      "sourcedDate": "2026-04-30",
+      "scores": {
+        "fragmentation": 4,
+        "unitEconomics": 4,
+        "aiLeverage": 4,
+        "moat": 3,
+        "exitPath": 3
+      },
       "rationale": {
         "fragmentation": "Similar fragmentation profile to Meridian, smaller scale.",
         "unitEconomics": "Strong margin, slightly less diversified client base.",
@@ -269,13 +574,29 @@
         "moat": "Decent retention, less entrenched than Meridian's workflows.",
         "exitPath": "Natural bolt-on under Meridian if the LOI closes."
       },
-      "thesisNote": "Queued as the first bolt-on candidate once Meridian closes."
+      "thesisNote": "Queued as the first bolt-on candidate once Meridian closes.",
+      "revenueUsd": 2400000,
+      "ebitdaUsd": 530000,
+      "entryMultiple": 3.72,
+      "askPriceUsd": 1950000,
+      "employees": 25,
+      "recurringPct": 75
     },
     {
-      "id": "d18", "name": "Barrister Support Services", "vertical": "Legal Back-Office", "location": "Albany, NY",
-      "stage": "Screening", "channel": "Marketplace", "sourcedDate": "2026-05-15",
-      "revenue": "$1.6M", "ebitda": "$260K", "ebitdaMargin": "16.0%",
-      "scores": { "fragmentation": 3, "unitEconomics": 3, "aiLeverage": 3, "moat": 2, "exitPath": 2 },
+      "id": "d18",
+      "name": "Barrister Support Services",
+      "vertical": "Legal Back-Office",
+      "location": "Albany, NY",
+      "stage": "Screening",
+      "channel": "Marketplace",
+      "sourcedDate": "2026-05-15",
+      "scores": {
+        "fragmentation": 3,
+        "unitEconomics": 3,
+        "aiLeverage": 3,
+        "moat": 2,
+        "exitPath": 2
+      },
       "rationale": {
         "fragmentation": "Small, fragmented local market.",
         "unitEconomics": "Below-average margin for the vertical.",
@@ -283,13 +604,29 @@
         "moat": "Short-term engagements, limited lock-in.",
         "exitPath": "Too small to be more than an opportunistic tuck-in."
       },
-      "thesisNote": "Low priority; screening only if valuation is unusually favorable."
+      "thesisNote": "Low priority; screening only if valuation is unusually favorable.",
+      "revenueUsd": 1600000,
+      "ebitdaUsd": 260000,
+      "entryMultiple": 3.17,
+      "askPriceUsd": 800000,
+      "employees": 17,
+      "recurringPct": 72
     },
     {
-      "id": "d19", "name": "Claritas Medical Billing", "vertical": "Medical Billing / RCM", "location": "Nashville, TN",
-      "stage": "Diligence", "channel": "Broker", "sourcedDate": "2026-01-27",
-      "revenue": "$6.8M", "ebitda": "$1.6M", "ebitdaMargin": "23.5%",
-      "scores": { "fragmentation": 4, "unitEconomics": 5, "aiLeverage": 5, "moat": 4, "exitPath": 5 },
+      "id": "d19",
+      "name": "Claritas Medical Billing",
+      "vertical": "Medical Billing / RCM",
+      "location": "Nashville, TN",
+      "stage": "Diligence",
+      "channel": "Broker",
+      "sourcedDate": "2026-01-27",
+      "scores": {
+        "fragmentation": 4,
+        "unitEconomics": 5,
+        "aiLeverage": 5,
+        "moat": 4,
+        "exitPath": 5
+      },
       "rationale": {
         "fragmentation": "RCM remains fragmented below the large national platforms.",
         "unitEconomics": "23.5% margin with highly recurring, contracted revenue tied to claims volume.",
@@ -297,13 +634,29 @@
         "moat": "EHR integrations create real switching costs once embedded.",
         "exitPath": "Strongest platform candidate in the entire pipeline on a blended basis."
       },
-      "thesisNote": "Highest composite score sourced to date; diligence prioritized accordingly."
+      "thesisNote": "Highest composite score sourced to date; diligence prioritized accordingly.",
+      "revenueUsd": 6800000,
+      "ebitdaUsd": 1600000,
+      "entryMultiple": 4.83,
+      "askPriceUsd": 7750000,
+      "employees": 65,
+      "recurringPct": 92
     },
     {
-      "id": "d20", "name": "Riverbend RCM Partners", "vertical": "Medical Billing / RCM", "location": "Louisville, KY",
-      "stage": "IOI", "channel": "Referral", "sourcedDate": "2026-03-02",
-      "revenue": "$4.1M", "ebitda": "$860K", "ebitdaMargin": "21.0%",
-      "scores": { "fragmentation": 4, "unitEconomics": 4, "aiLeverage": 4, "moat": 3, "exitPath": 4 },
+      "id": "d20",
+      "name": "Riverbend RCM Partners",
+      "vertical": "Medical Billing / RCM",
+      "location": "Louisville, KY",
+      "stage": "IOI",
+      "channel": "Referral",
+      "sourcedDate": "2026-03-02",
+      "scores": {
+        "fragmentation": 4,
+        "unitEconomics": 4,
+        "aiLeverage": 4,
+        "moat": 3,
+        "exitPath": 4
+      },
       "rationale": {
         "fragmentation": "Same fragmented regional RCM dynamic.",
         "unitEconomics": "Strong, slightly smaller-scale margin profile.",
@@ -311,13 +664,29 @@
         "moat": "Fewer EHR integrations than Claritas — somewhat less locked in.",
         "exitPath": "Credible bolt-on, or a second platform in a non-overlapping region."
       },
-      "thesisNote": "IOI sent; evaluating alongside Claritas for geographic overlap."
+      "thesisNote": "IOI sent; evaluating alongside Claritas for geographic overlap.",
+      "revenueUsd": 4100000,
+      "ebitdaUsd": 860000,
+      "entryMultiple": 4.08,
+      "askPriceUsd": 3500000,
+      "employees": 39,
+      "recurringPct": 89
     },
     {
-      "id": "d21", "name": "Coastal Health Billing", "vertical": "Medical Billing / RCM", "location": "Jacksonville, FL",
-      "stage": "Sourced", "channel": "Direct Outreach", "sourcedDate": "2026-05-28",
-      "revenue": "$2.5M", "ebitda": "$400K", "ebitdaMargin": "16.0%",
-      "scores": { "fragmentation": 3, "unitEconomics": 3, "aiLeverage": 4, "moat": 2, "exitPath": 3 },
+      "id": "d21",
+      "name": "Coastal Health Billing",
+      "vertical": "Medical Billing / RCM",
+      "location": "Jacksonville, FL",
+      "stage": "Sourced",
+      "channel": "Direct Outreach",
+      "sourcedDate": "2026-05-28",
+      "scores": {
+        "fragmentation": 3,
+        "unitEconomics": 3,
+        "aiLeverage": 4,
+        "moat": 2,
+        "exitPath": 3
+      },
       "rationale": {
         "fragmentation": "Smaller regional player in a fragmented category.",
         "unitEconomics": "Below Claritas/Riverbend on margin.",
@@ -325,13 +694,29 @@
         "moat": "Limited EHR integration depth so far.",
         "exitPath": "Plausible bolt-on once a platform closes in-region."
       },
-      "thesisNote": "Early-stage; revisit once Claritas or Riverbend closes."
+      "thesisNote": "Early-stage; revisit once Claritas or Riverbend closes.",
+      "revenueUsd": 2500000,
+      "ebitdaUsd": 400000,
+      "entryMultiple": 3.45,
+      "askPriceUsd": 1400000,
+      "employees": 24,
+      "recurringPct": 86
     },
     {
-      "id": "d22", "name": "Ironhide Freight Dispatch", "vertical": "Logistics & Dispatch", "location": "Fort Worth, TX",
-      "stage": "Screening", "channel": "Marketplace", "sourcedDate": "2026-04-14",
-      "revenue": "$7.0M", "ebitda": "$840K", "ebitdaMargin": "12.0%",
-      "scores": { "fragmentation": 3, "unitEconomics": 2, "aiLeverage": 4, "moat": 2, "exitPath": 2 },
+      "id": "d22",
+      "name": "Ironhide Freight Dispatch",
+      "vertical": "Logistics & Dispatch",
+      "location": "Fort Worth, TX",
+      "stage": "Screening",
+      "channel": "Marketplace",
+      "sourcedDate": "2026-04-14",
+      "scores": {
+        "fragmentation": 3,
+        "unitEconomics": 2,
+        "aiLeverage": 4,
+        "moat": 2,
+        "exitPath": 2
+      },
       "rationale": {
         "fragmentation": "Regional dispatch/brokerage market, moderately fragmented.",
         "unitEconomics": "Thin freight-brokerage margin, rate-cycle sensitive.",
@@ -339,13 +724,29 @@
         "moat": "Carrier and shipper relationships have limited lock-in.",
         "exitPath": "Cyclicality makes this a difficult standalone underwrite."
       },
-      "thesisNote": "AI story is real but margin cyclicality is the bigger risk factor."
+      "thesisNote": "AI story is real but margin cyclicality is the bigger risk factor.",
+      "revenueUsd": 7000000,
+      "ebitdaUsd": 840000,
+      "entryMultiple": 3.41,
+      "askPriceUsd": 2850000,
+      "employees": 44,
+      "recurringPct": 55
     },
     {
-      "id": "d23", "name": "Lakeshore Last-Mile", "vertical": "Logistics & Dispatch", "location": "Milwaukee, WI",
-      "stage": "Sourced", "channel": "Broker", "sourcedDate": "2026-05-06",
-      "revenue": "$5.2M", "ebitda": "$620K", "ebitdaMargin": "11.9%",
-      "scores": { "fragmentation": 3, "unitEconomics": 2, "aiLeverage": 4, "moat": 2, "exitPath": 3 },
+      "id": "d23",
+      "name": "Lakeshore Last-Mile",
+      "vertical": "Logistics & Dispatch",
+      "location": "Milwaukee, WI",
+      "stage": "Sourced",
+      "channel": "Broker",
+      "sourcedDate": "2026-05-06",
+      "scores": {
+        "fragmentation": 3,
+        "unitEconomics": 2,
+        "aiLeverage": 4,
+        "moat": 2,
+        "exitPath": 3
+      },
       "rationale": {
         "fragmentation": "Fragmented last-mile subcontractor market.",
         "unitEconomics": "Similar thin-margin profile to Ironhide.",
@@ -353,13 +754,29 @@
         "moat": "Contracts renew annually with a handful of retail clients.",
         "exitPath": "Only interesting as a bolt-on if a logistics platform materializes."
       },
-      "thesisNote": "Parked — not pursuing without a platform anchor first."
+      "thesisNote": "Parked — not pursuing without a platform anchor first.",
+      "revenueUsd": 5200000,
+      "ebitdaUsd": 620000,
+      "entryMultiple": 3.54,
+      "askPriceUsd": 2200000,
+      "employees": 32,
+      "recurringPct": 55
     },
     {
-      "id": "d24", "name": "Redline Logistics Co.", "vertical": "Logistics & Dispatch", "location": "Oklahoma City, OK",
-      "stage": "Passed", "channel": "Inbound", "sourcedDate": "2026-02-25",
-      "revenue": "$1.8M", "ebitda": "$90K", "ebitdaMargin": "5.0%",
-      "scores": { "fragmentation": 2, "unitEconomics": 1, "aiLeverage": 3, "moat": 1, "exitPath": 1 },
+      "id": "d24",
+      "name": "Redline Logistics Co.",
+      "vertical": "Logistics & Dispatch",
+      "location": "Oklahoma City, OK",
+      "stage": "Passed",
+      "channel": "Inbound",
+      "sourcedDate": "2026-02-25",
+      "scores": {
+        "fragmentation": 2,
+        "unitEconomics": 1,
+        "aiLeverage": 3,
+        "moat": 1,
+        "exitPath": 1
+      },
       "rationale": {
         "fragmentation": "Small local player, limited consolidation impact alone.",
         "unitEconomics": "One customer is 74% of revenue at a 5% margin.",
@@ -367,13 +784,29 @@
         "moat": "No contract with the anchor customer — pure key-relationship risk.",
         "exitPath": "No viable path given concentration risk."
       },
-      "thesisNote": "Passed — concentration risk disqualifies regardless of AI story."
+      "thesisNote": "Passed — concentration risk disqualifies regardless of AI story.",
+      "revenueUsd": 1800000,
+      "ebitdaUsd": 90000,
+      "entryMultiple": 3.1,
+      "askPriceUsd": 300000,
+      "employees": 11,
+      "recurringPct": 52
     },
     {
-      "id": "d25", "name": "Northstar Support Partners", "vertical": "Customer Support / BPO", "location": "Spokane, WA",
-      "stage": "LOI", "channel": "Broker", "sourcedDate": "2025-10-19",
-      "revenue": "$10.2M", "ebitda": "$1.53M", "ebitdaMargin": "15.0%",
-      "scores": { "fragmentation": 3, "unitEconomics": 3, "aiLeverage": 5, "moat": 3, "exitPath": 4 },
+      "id": "d25",
+      "name": "Northstar Support Partners",
+      "vertical": "Customer Support / BPO",
+      "location": "Spokane, WA",
+      "stage": "LOI",
+      "channel": "Broker",
+      "sourcedDate": "2025-10-19",
+      "scores": {
+        "fragmentation": 3,
+        "unitEconomics": 3,
+        "aiLeverage": 5,
+        "moat": 3,
+        "exitPath": 4
+      },
       "rationale": {
         "fragmentation": "Mid-market BPO space has room below the handful of national giants.",
         "unitEconomics": "Solid margin for the category, though seat-based pricing caps upside.",
@@ -381,13 +814,29 @@
         "moat": "Multi-year contracts with enterprise clients provide real stickiness.",
         "exitPath": "Platform-caliber if the AI-deflection roadmap executes as modeled."
       },
-      "thesisNote": "LOI signed; value creation plan is built entirely around the AI-deflection roadmap."
+      "thesisNote": "LOI signed; value creation plan is built entirely around the AI-deflection roadmap.",
+      "revenueUsd": 10200000,
+      "ebitdaUsd": 1530000,
+      "entryMultiple": 4.36,
+      "askPriceUsd": 6650000,
+      "employees": 146,
+      "recurringPct": 80
     },
     {
-      "id": "d26", "name": "Beacon BPO Group", "vertical": "Customer Support / BPO", "location": "Tucson, AZ",
-      "stage": "Sourced", "channel": "Marketplace", "sourcedDate": "2026-05-09",
-      "revenue": "$6.5M", "ebitda": "$780K", "ebitdaMargin": "12.0%",
-      "scores": { "fragmentation": 3, "unitEconomics": 2, "aiLeverage": 5, "moat": 2, "exitPath": 3 },
+      "id": "d26",
+      "name": "Beacon BPO Group",
+      "vertical": "Customer Support / BPO",
+      "location": "Tucson, AZ",
+      "stage": "Sourced",
+      "channel": "Marketplace",
+      "sourcedDate": "2026-05-09",
+      "scores": {
+        "fragmentation": 3,
+        "unitEconomics": 2,
+        "aiLeverage": 5,
+        "moat": 2,
+        "exitPath": 3
+      },
       "rationale": {
         "fragmentation": "Similar fragmented mid-market BPO dynamic to Northstar.",
         "unitEconomics": "Lower margin than Northstar, more seasonal client mix.",
@@ -395,13 +844,29 @@
         "moat": "Shorter contract terms than Northstar.",
         "exitPath": "Reasonable bolt-on once Northstar's playbook is proven."
       },
-      "thesisNote": "Hold until Northstar's AI-deflection roadmap shows results."
+      "thesisNote": "Hold until Northstar's AI-deflection roadmap shows results.",
+      "revenueUsd": 6500000,
+      "ebitdaUsd": 780000,
+      "entryMultiple": 3.61,
+      "askPriceUsd": 2800000,
+      "employees": 93,
+      "recurringPct": 77
     },
     {
-      "id": "d27", "name": "Clearline Contact Solutions", "vertical": "Customer Support / BPO", "location": "El Paso, TX",
-      "stage": "Screening", "channel": "Direct Outreach", "sourcedDate": "2026-04-22",
-      "revenue": "$3.9M", "ebitda": "$430K", "ebitdaMargin": "11.0%",
-      "scores": { "fragmentation": 3, "unitEconomics": 2, "aiLeverage": 4, "moat": 2, "exitPath": 2 },
+      "id": "d27",
+      "name": "Clearline Contact Solutions",
+      "vertical": "Customer Support / BPO",
+      "location": "El Paso, TX",
+      "stage": "Screening",
+      "channel": "Direct Outreach",
+      "sourcedDate": "2026-04-22",
+      "scores": {
+        "fragmentation": 3,
+        "unitEconomics": 2,
+        "aiLeverage": 4,
+        "moat": 2,
+        "exitPath": 2
+      },
       "rationale": {
         "fragmentation": "Smaller regional BPO, fragmented category.",
         "unitEconomics": "Below-average margin even for the category.",
@@ -409,13 +874,29 @@
         "moat": "Weak lock-in, frequent client rebids.",
         "exitPath": "Not platform-grade; marginal bolt-on at best."
       },
-      "thesisNote": "Low priority; contractual restrictions blunt the AI-leverage case."
+      "thesisNote": "Low priority; contractual restrictions blunt the AI-leverage case.",
+      "revenueUsd": 3900000,
+      "ebitdaUsd": 430000,
+      "entryMultiple": 3.24,
+      "askPriceUsd": 1400000,
+      "employees": 56,
+      "recurringPct": 77
     },
     {
-      "id": "d28", "name": "Willowbrook Property Group", "vertical": "Property Management", "location": "Des Moines, IA",
-      "stage": "Sourced", "channel": "Referral", "sourcedDate": "2026-05-24",
-      "revenue": "$4.8M", "ebitda": "$960K", "ebitdaMargin": "20.0%",
-      "scores": { "fragmentation": 4, "unitEconomics": 4, "aiLeverage": 3, "moat": 4, "exitPath": 3 },
+      "id": "d28",
+      "name": "Willowbrook Property Group",
+      "vertical": "Property Management",
+      "location": "Des Moines, IA",
+      "stage": "Sourced",
+      "channel": "Referral",
+      "sourcedDate": "2026-05-24",
+      "scores": {
+        "fragmentation": 4,
+        "unitEconomics": 4,
+        "aiLeverage": 3,
+        "moat": 4,
+        "exitPath": 3
+      },
       "rationale": {
         "fragmentation": "Fragmented regional property-management market.",
         "unitEconomics": "Strong margin with recurring management-fee revenue.",
@@ -423,13 +904,29 @@
         "moat": "Multi-year management agreements with owners are hard to dislodge.",
         "exitPath": "Reasonable platform candidate, though less AI-differentiated than the top names in the pipeline."
       },
-      "thesisNote": "Solid fundamentals; AI story is more incremental than transformative here."
+      "thesisNote": "Solid fundamentals; AI story is more incremental than transformative here.",
+      "revenueUsd": 4800000,
+      "ebitdaUsd": 960000,
+      "entryMultiple": 4.12,
+      "askPriceUsd": 3950000,
+      "employees": 40,
+      "recurringPct": 93
     },
     {
-      "id": "d29", "name": "Cornerstone Property Partners", "vertical": "Property Management", "location": "Omaha, NE",
-      "stage": "Screening", "channel": "Broker", "sourcedDate": "2026-04-17",
-      "revenue": "$3.2M", "ebitda": "$580K", "ebitdaMargin": "18.0%",
-      "scores": { "fragmentation": 4, "unitEconomics": 3, "aiLeverage": 3, "moat": 3, "exitPath": 3 },
+      "id": "d29",
+      "name": "Cornerstone Property Partners",
+      "vertical": "Property Management",
+      "location": "Omaha, NE",
+      "stage": "Screening",
+      "channel": "Broker",
+      "sourcedDate": "2026-04-17",
+      "scores": {
+        "fragmentation": 4,
+        "unitEconomics": 3,
+        "aiLeverage": 3,
+        "moat": 3,
+        "exitPath": 3
+      },
       "rationale": {
         "fragmentation": "Same fragmented category as Willowbrook, adjacent geography.",
         "unitEconomics": "Slightly thinner margin, smaller portfolio.",
@@ -437,13 +934,29 @@
         "moat": "Decent owner-contract retention.",
         "exitPath": "Natural bolt-on if Willowbrook or Highland closes first."
       },
-      "thesisNote": "Queued as a bolt-on candidate pending a platform close in the vertical."
+      "thesisNote": "Queued as a bolt-on candidate pending a platform close in the vertical.",
+      "revenueUsd": 3200000,
+      "ebitdaUsd": 580000,
+      "entryMultiple": 3.74,
+      "askPriceUsd": 2150000,
+      "employees": 27,
+      "recurringPct": 90
     },
     {
-      "id": "d30", "name": "Highland Residential Management", "vertical": "Property Management", "location": "Boise, ID",
-      "stage": "Closed", "channel": "Broker", "sourcedDate": "2025-09-12",
-      "revenue": "$6.0M", "ebitda": "$1.32M", "ebitdaMargin": "22.0%",
-      "scores": { "fragmentation": 4, "unitEconomics": 4, "aiLeverage": 4, "moat": 4, "exitPath": 4 },
+      "id": "d30",
+      "name": "Highland Residential Management",
+      "vertical": "Property Management",
+      "location": "Boise, ID",
+      "stage": "Closed",
+      "channel": "Broker",
+      "sourcedDate": "2025-09-12",
+      "scores": {
+        "fragmentation": 4,
+        "unitEconomics": 4,
+        "aiLeverage": 4,
+        "moat": 4,
+        "exitPath": 4
+      },
       "rationale": {
         "fragmentation": "Fragmented mountain-west property-management market.",
         "unitEconomics": "Strongest margin sourced in the vertical.",
@@ -451,7 +964,93 @@
         "moat": "High owner-retention rate pre-close, improved further with integrated tooling.",
         "exitPath": "Second platform closed — anchor for future property-management bolt-ons."
       },
-      "thesisNote": "Closed. Reference case alongside BluePeak for underwriting future deals."
+      "thesisNote": "Closed. Reference case alongside BluePeak for underwriting future deals.",
+      "revenueUsd": 6000000,
+      "ebitdaUsd": 1320000,
+      "entryMultiple": 4.49,
+      "askPriceUsd": 5950000,
+      "employees": 50,
+      "recurringPct": 93
     }
-  ]
+  ],
+  "verticalContext": {
+    "IT Managed Services": {
+      "automatableCostShare": 18,
+      "automatableNote": "Tier-1 ticket triage, patch management, monitoring escalation.",
+      "basis": "estimate",
+      "source": null,
+      "asOf": null
+    },
+    "Bookkeeping & Accounting": {
+      "automatableCostShare": 24,
+      "automatableNote": "Transaction categorisation, reconciliation, month-end close prep.",
+      "basis": "estimate",
+      "source": null,
+      "asOf": null
+    },
+    "Marketing & Creative Agencies": {
+      "automatableCostShare": 15,
+      "automatableNote": "Asset variation, copy drafting, reporting packs.",
+      "basis": "estimate",
+      "source": null,
+      "asOf": null
+    },
+    "Home Services": {
+      "automatableCostShare": 8,
+      "automatableNote": "Dispatch, scheduling, intake calls. The work itself stays physical.",
+      "basis": "estimate",
+      "source": null,
+      "asOf": null
+    },
+    "Staffing & Recruiting": {
+      "automatableCostShare": 16,
+      "automatableNote": "Sourcing, resume screening, first-pass qualification.",
+      "basis": "estimate",
+      "source": null,
+      "asOf": null
+    },
+    "Legal Back-Office": {
+      "automatableCostShare": 26,
+      "automatableNote": "Document review, intake, standard drafting.",
+      "basis": "estimate",
+      "source": null,
+      "asOf": null
+    },
+    "Medical Billing / RCM": {
+      "automatableCostShare": 28,
+      "automatableNote": "Claim scrubbing, coding suggestion, denial triage.",
+      "basis": "estimate",
+      "source": null,
+      "asOf": null
+    },
+    "Logistics & Dispatch": {
+      "automatableCostShare": 13,
+      "automatableNote": "Route optimisation, track-and-trace, exception handling.",
+      "basis": "estimate",
+      "source": null,
+      "asOf": null
+    },
+    "Customer Support / BPO": {
+      "automatableCostShare": 32,
+      "automatableNote": "Tier-1 deflection and assisted resolution.",
+      "basis": "estimate",
+      "source": null,
+      "asOf": null
+    },
+    "Property Management": {
+      "automatableCostShare": 15,
+      "automatableNote": "Maintenance coordination, tenant comms, renewal admin.",
+      "basis": "estimate",
+      "source": null,
+      "asOf": null
+    }
+  },
+  "rollupModel": {
+    "defaultCapturePct": 30,
+    "defaultOrganicPct": 12,
+    "exitMultipleBase": 5.0,
+    "exitMultiplePerMillionEbitda": 0.25,
+    "exitMultipleCap": 8.5,
+    "note": "All-equity, no leverage. Exit multiple defaults to a size-based scale premium over the blended entry multiple; override with the slider."
+  }
 }

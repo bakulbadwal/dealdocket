@@ -31,6 +31,9 @@ async function init() {
   renderPresets();
   renderFramework();
   renderControls();
+  seedRollup();
+  wireRollup();
+  renderRollup();
   renderPipeline();
 }
 
@@ -189,15 +192,21 @@ function sortedDeals(deals) {
       withScore.sort((a, b) => new Date(b.d.sourcedDate) - new Date(a.d.sourcedDate));
       break;
     case "ebitda-desc":
-      withScore.sort((a, b) => parseMoney(b.d.ebitda) - parseMoney(a.d.ebitda));
+      withScore.sort((a, b) => b.d.ebitdaUsd - a.d.ebitdaUsd);
       break;
   }
   return withScore;
 }
 
-function parseMoney(s) {
-  const n = parseFloat(s.replace(/[$,]/g, ""));
-  return s.includes("M") ? n * 1_000_000 : s.includes("K") ? n * 1_000 : n;
+/* ---- Formatting. Financials are stored as numbers; display is derived. ---- */
+function fmtUsd(n) {
+  if (n >= 1_000_000) return "$" + (n / 1_000_000).toFixed(1) + "M";
+  if (n >= 1_000) return "$" + Math.round(n / 1_000) + "K";
+  return "$" + Math.round(n);
+}
+
+function marginPct(deal) {
+  return (deal.ebitdaUsd / deal.revenueUsd) * 100;
 }
 
 function scoreClass(score) {
@@ -214,14 +223,21 @@ function renderPipeline() {
   const root = document.getElementById("pipelineRoot");
   root.innerHTML = "";
   if (ranked.length === 0) {
-    root.innerHTML = '<tr><td colspan="5" class="empty-state">No deals match these filters.</td></tr>';
+    root.innerHTML = '<tr><td colspan="6" class="empty-state">No deals match these filters.</td></tr>';
     return;
   }
+  const inRollup = new Set(rollupSelection().map((x) => x.id));
   ranked.forEach(({ d, score }) => {
     const cls = scoreClass(score);
+    const picked = inRollup.has(d.id);
     const row = document.createElement("tr");
     row.dataset.id = d.id;
     row.innerHTML = `
+      <td class="col-pick">
+        <button type="button" class="pick-btn${picked ? " on" : ""}" data-pick="${d.id}"
+          aria-pressed="${picked}" aria-label="${picked ? "Remove" : "Add"} ${d.name} ${picked ? "from" : "to"} roll-up"
+          title="${picked ? "Remove from roll-up" : "Add to roll-up"}">${picked ? "&minus;" : "+"}</button>
+      </td>
       <td>
         <span class="deal-name">${d.name}</span>
         <span class="deal-sub">${d.vertical} · ${d.location}</span>
@@ -229,7 +245,7 @@ function renderPipeline() {
       </td>
       <td><span class="deal-badge stage-${slug(d.stage)}">${d.stage}</span></td>
       <td>${d.channel}</td>
-      <td class="fin-cell">${d.revenue} rev<br>${d.ebitda} EBITDA<br><span class="deal-margin">${d.ebitdaMargin}</span></td>
+      <td class="fin-cell">${fmtUsd(d.revenueUsd)} rev<br>${fmtUsd(d.ebitdaUsd)} EBITDA<br><span class="deal-margin">${marginPct(d).toFixed(1)}% · ${d.entryMultiple.toFixed(1)}x</span></td>
       <td>
         <div class="deal-score-cell">
           <div class="score-bar-track"><div class="score-bar-fill ${cls}" style="width:${(score / 5) * 100}%"></div></div>
@@ -237,6 +253,10 @@ function renderPipeline() {
         </div>
       </td>
     `;
+    row.querySelector(".pick-btn").addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleRollupDeal(d.id);
+    });
     row.addEventListener("click", () => openDrawer(d, score));
     root.appendChild(row);
   });
@@ -336,9 +356,12 @@ function openDrawer(deal, score) {
     <p class="drawer-sub">${deal.vertical} · ${deal.location}</p>
     <div class="drawer-radar">${radarSVG(deal)}</div>
     <div class="drawer-financials">
-      <div><span class="drawer-fin-label">Revenue</span><span class="drawer-fin-val">${deal.revenue}</span></div>
-      <div><span class="drawer-fin-label">EBITDA</span><span class="drawer-fin-val">${deal.ebitda}</span></div>
-      <div><span class="drawer-fin-label">Margin</span><span class="drawer-fin-val">${deal.ebitdaMargin}</span></div>
+      <div><span class="drawer-fin-label">Revenue</span><span class="drawer-fin-val">${fmtUsd(deal.revenueUsd)}</span></div>
+      <div><span class="drawer-fin-label">EBITDA</span><span class="drawer-fin-val">${fmtUsd(deal.ebitdaUsd)}</span></div>
+      <div><span class="drawer-fin-label">Margin</span><span class="drawer-fin-val">${marginPct(deal).toFixed(1)}%</span></div>
+      <div><span class="drawer-fin-label">Ask / multiple</span><span class="drawer-fin-val">${fmtUsd(deal.askPriceUsd)} · ${deal.entryMultiple.toFixed(2)}x</span></div>
+      <div><span class="drawer-fin-label">Headcount</span><span class="drawer-fin-val">${deal.employees}</span></div>
+      <div><span class="drawer-fin-label">Recurring revenue</span><span class="drawer-fin-val">${deal.recurringPct}%</span></div>
       <div><span class="drawer-fin-label">Channel</span><span class="drawer-fin-val">${deal.channel}</span></div>
       <div><span class="drawer-fin-label">Sourced</span><span class="drawer-fin-val">${deal.sourcedDate}</span></div>
       <div><span class="drawer-fin-label">Weighted score</span><span class="drawer-fin-val">${score.toFixed(2)} / 5</span></div>
@@ -355,6 +378,280 @@ function openDrawer(deal, score) {
 function closeDrawer() {
   document.getElementById("drawer").classList.remove("open");
   document.getElementById("drawerOverlay").classList.remove("open");
+}
+
+/* ============================================================
+   Roll-up builder
+   ============================================================
+   A screen ranks targets; it never shows why the strategy pays.
+   This models the two distinct sources of return in a roll-up:
+
+     1. Multiple arbitrage — buy sub-scale assets at the small-company
+        multiple, sell the combined entity at the platform multiple.
+        Earned on the EBITDA you acquired, with no operating change.
+
+     2. AI margin expansion — the actual thesis. Applied to each deal's
+        automatable cost base, scaled by how automatable that vertical
+        is and how well the specific asset scores on aiLeverage.
+
+   The bridge is constructed to close exactly:
+     entryPrice + arbitrage + aiValue + organicValue === exitValue
+   ============================================================ */
+
+const ROLLUP = {
+  platformId: null,
+  addonIds: [],
+  capturePct: 30,
+  organicPct: 12,
+  exitMultiple: null, // null = use the size-derived default
+};
+
+function rollupSelection() {
+  if (!ROLLUP.platformId) return [];
+  const byId = (id) => DATA.deals.find((d) => d.id === id);
+  const platform = byId(ROLLUP.platformId);
+  if (!platform) return [];
+  return [platform, ...ROLLUP.addonIds.map(byId).filter(Boolean)];
+}
+
+function defaultExitMultiple(ebitdaExit) {
+  const m = DATA.rollupModel;
+  return Math.min(
+    m.exitMultipleCap,
+    m.exitMultipleBase + (ebitdaExit / 1_000_000) * m.exitMultiplePerMillionEbitda
+  );
+}
+
+function computeRollup() {
+  const sel = rollupSelection();
+  if (sel.length === 0) return null;
+
+  const revenue = sel.reduce((s, d) => s + d.revenueUsd, 0);
+  const ebitdaEntry = sel.reduce((s, d) => s + d.ebitdaUsd, 0);
+  const employees = sel.reduce((s, d) => s + d.employees, 0);
+  const entryPrice = sel.reduce((s, d) => s + d.askPriceUsd, 0);
+  const blendedEntryMultiple = entryPrice / ebitdaEntry;
+
+  // AI uplift: automatable cost base x how much of it you actually capture
+  // x how automatable this specific asset is judged to be.
+  const capture = ROLLUP.capturePct / 100;
+  const perDeal = sel.map((d) => {
+    const share = DATA.verticalContext[d.vertical].automatableCostShare / 100;
+    const leverage = d.scores.aiLeverage / 5;
+    return { deal: d, uplift: d.revenueUsd * share * capture * leverage };
+  });
+  const ebitdaAI = perDeal.reduce((s, x) => s + x.uplift, 0);
+  const ebitdaOrganic = ebitdaEntry * (ROLLUP.organicPct / 100);
+  const ebitdaExit = ebitdaEntry + ebitdaAI + ebitdaOrganic;
+
+  const exitMultiple = ROLLUP.exitMultiple ?? defaultExitMultiple(ebitdaExit);
+  const exitValue = ebitdaExit * exitMultiple;
+
+  // Bridge components. Arbitrage is earned only on acquired EBITDA; the
+  // uplift components are valued at the exit multiple they help create.
+  const arbitrage = ebitdaEntry * (exitMultiple - blendedEntryMultiple);
+  const aiValue = ebitdaAI * exitMultiple;
+  const organicValue = ebitdaOrganic * exitMultiple;
+
+  return {
+    sel, perDeal, revenue, employees,
+    ebitdaEntry, ebitdaAI, ebitdaOrganic, ebitdaExit,
+    entryPrice, blendedEntryMultiple, exitMultiple, exitValue,
+    arbitrage, aiValue, organicValue,
+    marginEntry: (ebitdaEntry / revenue) * 100,
+    marginExit: (ebitdaExit / revenue) * 100,
+    moic: exitValue / entryPrice,
+    bridgeCloses: Math.abs(entryPrice + arbitrage + aiValue + organicValue - exitValue) < 1,
+  };
+}
+
+/* Stacked value bridge. Segments are drawn proportional to exit value so the
+   bar always reads as "this is where the money came from". */
+function bridgeSVG(r) {
+  const W = 520, H = 128, PAD = 4;
+  const segs = [
+    { label: "Entry price", val: r.entryPrice, cls: "seg-entry" },
+    { label: "Multiple arbitrage", val: r.arbitrage, cls: "seg-arb" },
+    { label: "AI margin", val: r.aiValue, cls: "seg-ai" },
+    { label: "Organic", val: r.organicValue, cls: "seg-org" },
+  ].filter((s) => s.val > 0);
+
+  const total = segs.reduce((s, x) => s + x.val, 0) || 1;
+  let x = 0;
+  const bars = segs.map((s) => {
+    const w = (s.val / total) * (W - PAD * 2);
+    const rect = `<rect x="${(PAD + x).toFixed(1)}" y="26" width="${Math.max(w - 2, 1).toFixed(1)}" height="34" rx="2" class="${s.cls}"/>`;
+    const showLabel = w > 58;
+    const cx = PAD + x + w / 2;
+    const label = showLabel
+      ? `<text x="${cx.toFixed(1)}" y="18" class="bridge-lab" text-anchor="middle">${s.label}</text>
+         <text x="${cx.toFixed(1)}" y="76" class="bridge-val" text-anchor="middle">${fmtUsd(s.val)}</text>`
+      : "";
+    x += w;
+    return rect + label;
+  }).join("");
+
+  return `<svg viewBox="0 0 ${W} ${H}" class="bridge-svg" role="img"
+    aria-label="Value bridge: entry price ${fmtUsd(r.entryPrice)}, multiple arbitrage ${fmtUsd(r.arbitrage)}, AI margin ${fmtUsd(r.aiValue)}, organic ${fmtUsd(r.organicValue)}, total exit value ${fmtUsd(r.exitValue)}">
+    ${bars}
+    <line x1="${PAD}" y1="90" x2="${W - PAD}" y2="90" class="bridge-axis"/>
+    <text x="${PAD}" y="108" class="bridge-end">Entry ${fmtUsd(r.entryPrice)} · ${r.blendedEntryMultiple.toFixed(2)}x</text>
+    <text x="${W - PAD}" y="108" class="bridge-end" text-anchor="end">Exit ${fmtUsd(r.exitValue)} · ${r.exitMultiple.toFixed(2)}x</text>
+  </svg>`;
+}
+
+function renderRollupChips() {
+  const root = document.getElementById("rollupChips");
+  const sel = rollupSelection();
+  if (sel.length === 0) {
+    root.innerHTML = '<span class="rollup-empty">No deals selected.</span>';
+    return;
+  }
+  root.innerHTML = sel
+    .map((d, i) => {
+      const isPlatform = i === 0;
+      return `<button type="button" class="rollup-chip${isPlatform ? " platform" : ""}" data-id="${d.id}"
+        aria-label="${isPlatform ? "Platform" : "Add-on"}: ${d.name}. Click to make platform.">
+        <span class="rollup-chip-role">${isPlatform ? "PLATFORM" : "ADD-ON"}</span>
+        <span class="rollup-chip-name">${d.name}</span>
+        <span class="rollup-chip-fin">${fmtUsd(d.ebitdaUsd)}</span>
+      </button>`;
+    })
+    .join("");
+  root.querySelectorAll(".rollup-chip").forEach((btn) => {
+    btn.addEventListener("click", () => promotePlatform(btn.dataset.id));
+  });
+}
+
+function promotePlatform(id) {
+  if (!rollupSelection().some((d) => d.id === id)) return;
+  const others = rollupSelection().filter((d) => d.id !== id).map((d) => d.id);
+  ROLLUP.platformId = id;
+  ROLLUP.addonIds = others;
+  renderRollup();
+}
+
+function toggleRollupDeal(id) {
+  if (ROLLUP.platformId === id) {
+    // removing the platform promotes the next add-on
+    ROLLUP.platformId = ROLLUP.addonIds.shift() || null;
+  } else if (ROLLUP.addonIds.includes(id)) {
+    ROLLUP.addonIds = ROLLUP.addonIds.filter((x) => x !== id);
+  } else if (!ROLLUP.platformId) {
+    ROLLUP.platformId = id;
+  } else {
+    ROLLUP.addonIds.push(id);
+  }
+  renderRollup();
+  renderPipeline();
+}
+
+function renderRollup() {
+  renderRollupChips();
+  const out = document.getElementById("rollupOutput");
+  const r = computeRollup();
+
+  const capture = DATA.rollupModel;
+  document.getElementById("captureVal").textContent = ROLLUP.capturePct + "%";
+  document.getElementById("organicVal").textContent = ROLLUP.organicPct + "%";
+
+  if (!r) {
+    out.innerHTML = '<p class="rollup-empty-state">Add a deal from the pipeline to model a roll-up.</p>';
+    document.getElementById("exitVal").textContent = "—";
+    document.getElementById("captureDesc").textContent = "";
+    document.getElementById("exitDesc").textContent = "";
+    return;
+  }
+
+  document.getElementById("exitVal").textContent = r.exitMultiple.toFixed(2) + "x";
+  document.getElementById("exitSlider").value = Math.round(r.exitMultiple * 10);
+  document.getElementById("exitDesc").textContent =
+    "Blended entry " + r.blendedEntryMultiple.toFixed(2) + "x · spread " +
+    (r.exitMultiple - r.blendedEntryMultiple).toFixed(2) + "x";
+
+  const shares = r.sel.map((d) => DATA.verticalContext[d.vertical].automatableCostShare);
+  const lo = Math.min(...shares), hi = Math.max(...shares);
+  document.getElementById("captureDesc").textContent =
+    "Automatable cost base " + (lo === hi ? lo + "%" : lo + "–" + hi + "%") +
+    " of revenue across the selection, scaled by each asset's AI-leverage score.";
+
+  const arbShare = (r.arbitrage / (r.exitValue - r.entryPrice)) * 100;
+  const aiShare = (r.aiValue / (r.exitValue - r.entryPrice)) * 100;
+
+  out.innerHTML = `
+    <div class="rollup-stats">
+      <div class="rollup-stat"><span class="rs-num">${fmtUsd(r.revenue)}</span><span class="rs-lab">Pro-forma revenue</span></div>
+      <div class="rollup-stat"><span class="rs-num">${fmtUsd(r.ebitdaExit)}</span><span class="rs-lab">EBITDA at exit</span></div>
+      <div class="rollup-stat"><span class="rs-num">${r.marginEntry.toFixed(1)}% → ${r.marginExit.toFixed(1)}%</span><span class="rs-lab">Margin</span></div>
+      <div class="rollup-stat hero"><span class="rs-num">${r.moic.toFixed(2)}x</span><span class="rs-lab">Gross MOIC</span></div>
+    </div>
+
+    <div class="bridge-wrap">
+      <div class="bridge-title">Value bridge — ${r.sel.length} asset${r.sel.length === 1 ? "" : "s"}, ${r.employees} employees</div>
+      ${bridgeSVG(r)}
+    </div>
+
+    <div class="rollup-read">
+      <p><strong>${arbShare.toFixed(0)}%</strong> of the gain is multiple arbitrage — earned by buying at
+      ${r.blendedEntryMultiple.toFixed(2)}x and exiting at ${r.exitMultiple.toFixed(2)}x, with no operating change.
+      <strong>${aiShare.toFixed(0)}%</strong> comes from the AI margin thesis actually working.</p>
+      <p class="rollup-caveat">All-equity, pre-fee, pre-tax. No integration cost, no multiple compression,
+      no failed add-on. The arbitrage line is the part that survives if the AI thesis disappoints — which is
+      the honest reason this structure is attractive.</p>
+    </div>
+  `;
+}
+
+function wireRollup() {
+  document.getElementById("captureSlider").addEventListener("input", (e) => {
+    ROLLUP.capturePct = Number(e.target.value);
+    renderRollup();
+  });
+  document.getElementById("organicSlider").addEventListener("input", (e) => {
+    ROLLUP.organicPct = Number(e.target.value);
+    renderRollup();
+  });
+  document.getElementById("exitSlider").addEventListener("input", (e) => {
+    ROLLUP.exitMultiple = Number(e.target.value) / 10;
+    renderRollup();
+  });
+  document.getElementById("rollupClear").addEventListener("click", () => {
+    ROLLUP.platformId = null;
+    ROLLUP.addonIds = [];
+    ROLLUP.exitMultiple = null;
+    renderRollup();
+    renderPipeline();
+  });
+}
+
+/* Seed a coherent default so the feature is populated on first paint:
+   the highest-EBITDA asset in the most-represented vertical, plus its
+   three strongest same-vertical add-ons. */
+function seedRollup() {
+  // Count only deals actually available to buy -- counting Passed deals picks
+  // verticals that look deep but aren't.
+  const eligible = {};
+  DATA.deals
+    .filter((d) => d.stage !== "Passed")
+    .forEach((d) => (eligible[d.vertical] = (eligible[d.vertical] || 0) + 1));
+
+  const maxDepth = Math.max(...Object.values(eligible));
+  // Among the deepest verticals, start on the most AI-exposed one so the
+  // default view demonstrates the thesis rather than a marginal case.
+  const vertical = Object.keys(eligible)
+    .filter((v) => eligible[v] === maxDepth)
+    .sort(
+      (a, b) =>
+        DATA.verticalContext[b].automatableCostShare -
+        DATA.verticalContext[a].automatableCostShare
+    )[0];
+
+  const pool = DATA.deals
+    .filter((d) => d.vertical === vertical && d.stage !== "Passed")
+    .sort((a, b) => b.ebitdaUsd - a.ebitdaUsd);
+  if (!pool.length) return;
+  ROLLUP.platformId = pool[0].id;
+  ROLLUP.addonIds = pool.slice(1).map((d) => d.id);
 }
 
 init();
