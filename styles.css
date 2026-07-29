@@ -990,3 +990,48 @@ select:focus-visible,
   outline-offset: 2px;
   border-radius: 1px;
 }
+
+/* ---- v2: overlaid profiles ---- */
+
+.shape-wrap {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: 20px;
+  align-items: center;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.multi-radar { width: 100%; height: auto; display: block; }
+
+.radar-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 6px;
+}
+.rl-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.rl-swatch {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  flex: none;
+}
+
+.shape-read {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--text-dim);
+}
+.shape-read strong { color: var(--green); font-weight: 600; }
+
+@media (max-width: 900px) {
+  .shape-wrap { grid-template-columns: 1fr; }
+}

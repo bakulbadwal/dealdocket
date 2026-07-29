@@ -34,8 +34,18 @@ async function init() {
   renderControls();
   seedRollup();
   wireRollup();
+
+  // A hash in the URL is an explicit request for a specific view, so it wins
+  // over the remembered one. Either overrides the seeded default.
+  let saved = null;
+  try { saved = localStorage.getItem(STATE_KEY); } catch (e) {}
+  applyState(location.hash.slice(1)) || applyState(saved);
+  syncControlsToState();
+  stateReady = true;
+
   renderRollup();
   renderPipeline();
+  writeState();
 }
 
 function compositeScore(deal) {
@@ -276,6 +286,7 @@ function renderPipeline() {
     row.addEventListener("click", () => openDrawer(d, score, nameBtn));
     root.appendChild(row);
   });
+  writeState();
 }
 
 function slug(s) {
@@ -438,6 +449,95 @@ function closeDrawer() {
   drawer.setAttribute("aria-hidden", "true");
   if (drawerReturnTo && document.contains(drawerReturnTo)) drawerReturnTo.focus();
   drawerReturnTo = null;
+}
+
+/* ============================================================
+   Shareable state
+   ============================================================
+   Everything the user configures -- weights, filters, sort, and the whole
+   roll-up selection with its assumptions -- is encoded into the URL hash,
+   so a link reproduces a specific reading rather than the default view.
+   The same string is mirrored to localStorage, so returning to the page
+   without a hash restores your last calibration instead of resetting.
+   ============================================================ */
+
+const STATE_KEY = "dealdocket.state.v2";
+let stateReady = false; // suppress writes while we're applying a state
+
+function serializeState() {
+  const keys = DATA.framework.criteria.map((c) => c.key);
+  const p = new URLSearchParams();
+  p.set("w", keys.map((k) => WEIGHTS[k]).join("."));
+  if (STATE.vertical !== "all") p.set("v", STATE.vertical);
+  if (STATE.stage !== "all") p.set("s", STATE.stage);
+  if (STATE.channel !== "all") p.set("c", STATE.channel);
+  if (STATE.activeOnly) p.set("a", "1");
+  if (STATE.sort !== "composite-desc") p.set("o", STATE.sort);
+  if (STATE.search) p.set("q", STATE.search);
+  if (ROLLUP.platformId) {
+    p.set("p", ROLLUP.platformId);
+    if (ROLLUP.addonIds.length) p.set("x", ROLLUP.addonIds.join("."));
+  }
+  p.set("cap", String(ROLLUP.capturePct));
+  p.set("org", String(ROLLUP.organicPct));
+  if (ROLLUP.exitMultiple != null) p.set("e", ROLLUP.exitMultiple.toFixed(2));
+  return p.toString();
+}
+
+function writeState() {
+  if (!stateReady) return;
+  const s = serializeState();
+  history.replaceState(null, "", "#" + s);
+  try { localStorage.setItem(STATE_KEY, s); } catch (e) {}
+}
+
+function applyState(str) {
+  if (!str) return false;
+  const p = new URLSearchParams(str);
+  const keys = DATA.framework.criteria.map((c) => c.key);
+
+  const w = (p.get("w") || "").split(".").map(Number);
+  if (w.length === keys.length && w.every((n) => Number.isFinite(n) && n >= 0)) {
+    keys.forEach((k, i) => (WEIGHTS[k] = w[i]));
+  }
+  const valid = (val, list) => val && list.includes(val);
+  if (valid(p.get("v"), DATA.verticals)) STATE.vertical = p.get("v");
+  if (valid(p.get("s"), DATA.stages)) STATE.stage = p.get("s");
+  if (valid(p.get("c"), DATA.channels)) STATE.channel = p.get("c");
+  if (p.has("a")) STATE.activeOnly = p.get("a") === "1";
+  if (p.get("o")) STATE.sort = p.get("o");
+  if (p.get("q")) STATE.search = p.get("q");
+
+  const known = new Set(DATA.deals.map((d) => d.id));
+  if (p.get("p") && known.has(p.get("p"))) {
+    ROLLUP.platformId = p.get("p");
+    ROLLUP.addonIds = (p.get("x") || "").split(".").filter((id) => known.has(id) && id !== p.get("p"));
+  }
+  const num = (k, lo, hi) => {
+    const n = Number(p.get(k));
+    return p.get(k) !== null && Number.isFinite(n) && n >= lo && n <= hi ? n : null;
+  };
+  const cap = num("cap", 0, 100); if (cap !== null) ROLLUP.capturePct = cap;
+  const org = num("org", 0, 60); if (org !== null) ROLLUP.organicPct = org;
+  const ex = num("e", 1, 20); if (ex !== null) ROLLUP.exitMultiple = ex;
+  return true;
+}
+
+/* Push restored state back into the DOM controls that hold it. */
+function syncControlsToState() {
+  DATA.framework.criteria.forEach((c) => {
+    const el = document.getElementById(`slider-${c.key}`);
+    if (el) el.value = WEIGHTS[c.key];
+  });
+  updateWeightLabels();
+  document.getElementById("verticalFilter").value = STATE.vertical;
+  document.getElementById("stageFilter").value = STATE.stage;
+  document.getElementById("channelFilter").value = STATE.channel;
+  document.getElementById("activeOnly").checked = STATE.activeOnly;
+  document.getElementById("sortSelect").value = STATE.sort;
+  document.getElementById("searchInput").value = STATE.search;
+  document.getElementById("captureSlider").value = ROLLUP.capturePct;
+  document.getElementById("organicSlider").value = ROLLUP.organicPct;
 }
 
 /* ============================================================
@@ -644,6 +744,88 @@ function bridgeSVG(r) {
   </svg>`;
 }
 
+/* Overlaid radar for the current selection. The per-deal radar in the drawer
+   answers "is this asset good"; this answers the question you actually have
+   while assembling a roll-up: are these the same shape, or complementary? */
+const SERIES_COLORS = ["#3ddc84", "#e8a33d", "#7aa7d8", "#c58ae0", "#e05d5d"];
+
+function multiRadarSVG(deals) {
+  const SIZE = 250, CX = SIZE / 2, CY = SIZE / 2, R = 78;
+  const criteria = DATA.framework.criteria;
+  const n = criteria.length;
+  const point = (i, r) => {
+    const a = (Math.PI * 2 * i) / n - Math.PI / 2;
+    return [CX + r * Math.cos(a), CY + r * Math.sin(a)];
+  };
+  const ring = (r) =>
+    Array.from({ length: n }, (_, i) => point(i, r).map((v) => v.toFixed(1)).join(",")).join(" ");
+
+  const rings = [R, R * 0.66, R * 0.33]
+    .map((r) => `<polygon points="${ring(r)}" fill="none" stroke="#262b26" stroke-width="1"/>`)
+    .join("");
+  const axes = Array.from({ length: n }, (_, i) => {
+    const [x, y] = point(i, R);
+    return `<line x1="${CX}" y1="${CY}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#3a423a" stroke-width="1"/>`;
+  }).join("");
+
+  const shapes = deals.map((d, di) => {
+    const col = SERIES_COLORS[di % SERIES_COLORS.length];
+    const pts = criteria.map((c, i) => point(i, (d.scores[c.key] / 5) * R));
+    const poly = pts.map((p) => p.map((v) => v.toFixed(1)).join(",")).join(" ");
+    return `<polygon points="${poly}" fill="${col}" fill-opacity="0.10" stroke="${col}" stroke-width="1.75"/>`;
+  }).join("");
+
+  const LABELS = { fragmentation: "FRAG", unitEconomics: "ECON", aiLeverage: "AI LEV", moat: "MOAT", exitPath: "EXIT" };
+  const labels = criteria.map((c, i) => {
+    const [x, y] = point(i, R + 16);
+    let anchor = "middle";
+    if (x > CX + 8) anchor = "start";
+    else if (x < CX - 8) anchor = "end";
+    const dy = y > CY + 8 ? 8 : y < CY - 8 ? 0 : 4;
+    return `<text x="${x.toFixed(1)}" y="${(y + dy).toFixed(1)}" fill="#7c877c" font-size="9"
+      font-family="SF Mono, Menlo, Consolas, monospace" text-anchor="${anchor}" letter-spacing="0.05em">${LABELS[c.key] || c.short.toUpperCase()}</text>`;
+  }).join("");
+
+  return `<svg viewBox="0 0 ${SIZE} ${SIZE}" class="multi-radar" role="img"
+    aria-label="Five-box profiles overlaid for ${deals.map((d) => d.name).join(", ")}">
+    ${rings}${axes}${shapes}${labels}
+  </svg>`;
+}
+
+/* Read the overlay in words: where the selection agrees, and where it doesn't.
+   A roll-up of identical shapes concentrates risk; complementary shapes are
+   the case for combining them at all. */
+function shapeRead(deals) {
+  if (deals.length < 2) {
+    return "Add a second asset to compare profiles. A roll-up of identical shapes concentrates the same risk; complementary shapes are the argument for combining them.";
+  }
+  const crit = DATA.framework.criteria.map((c) => {
+    const vals = deals.map((d) => d.scores[c.key]);
+    return { label: c.short, spread: Math.max(...vals) - Math.min(...vals), min: Math.min(...vals), avg: vals.reduce((a, b) => a + b, 0) / vals.length };
+  });
+  const widest = crit.slice().sort((a, b) => b.spread - a.spread)[0];
+  const weakest = crit.slice().sort((a, b) => a.avg - b.avg)[0];
+  const aligned = crit.filter((c) => c.spread === 0);
+
+  const parts = [];
+  if (widest.spread >= 2) {
+    parts.push(`Widest divergence is <strong>${widest.label}</strong> — a ${widest.spread}-point spread, so the assets are not interchangeable there.`);
+  } else {
+    parts.push(`No criterion splits the selection by more than ${widest.spread} point${widest.spread === 1 ? "" : "s"} — these are similar assets, which concentrates rather than diversifies the thesis.`);
+  }
+  if (aligned.length) {
+    parts.push(`They score identically on ${aligned.map((c) => c.label).join(", ")}.`);
+  }
+  parts.push(`Weakest shared axis is <strong>${weakest.label}</strong> (avg ${weakest.avg.toFixed(1)}/5) — the constraint the combined entity inherits.`);
+  return parts.join(" ");
+}
+
+function radarLegend(deals) {
+  return `<div class="radar-legend">` + deals.map((d, i) =>
+    `<span class="rl-item"><span class="rl-swatch" style="background:${SERIES_COLORS[i % SERIES_COLORS.length]}"></span>${d.name}</span>`
+  ).join("") + `</div>`;
+}
+
 function renderRollupChips() {
   const root = document.getElementById("rollupChips");
   const sel = rollupSelection();
@@ -733,6 +915,15 @@ function renderRollup() {
     <div class="bridge-wrap">
       <div class="bridge-title">Value bridge — ${r.sel.length} asset${r.sel.length === 1 ? "" : "s"}, ${r.employees} employees</div>
       ${bridgeSVG(r)}
+    </div>
+
+    <div class="shape-wrap">
+      <div class="shape-chart">
+        <div class="bridge-title">Profiles overlaid</div>
+        ${multiRadarSVG(r.sel)}
+        ${radarLegend(r.sel)}
+      </div>
+      <p class="shape-read">${shapeRead(r.sel)}</p>
     </div>
 
     <div class="rollup-read">

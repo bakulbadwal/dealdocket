@@ -31,16 +31,18 @@ A sourcing analyst or principal running a thesis-driven pipeline who wants to (a
 
 ## How I'd measure success
 
-**North-star (if this were the real Cronus tool):** *screen precision* — of the deals the framework ranks top-decile, what share actually convert to real diligence / LOIs? That's whether the screen is predictive or just tidy.
+**North-star (if this ran against a live pipeline):** *screen precision* — of the deals the framework ranks top-decile, what share actually convert to real diligence / LOIs? That's whether the screen is predictive or just tidy.
 
 **Supporting metrics:** sourcing-funnel conversion (sourced → screened → advanced), analyst time-to-rank a new pipeline, and inter-user weight variance (how differently do two people set the sliders — a proxy for how subjective the thesis really is).
 
 ## Roadmap — and where this actually goes
 
-This is the *illustrative* version. The real one already exists internally (a live BizBuySell-fed Cronus sourcing tool). The productization path is exactly the one I'd argue for in any data product:
+This is the *illustrative* version, and the productization path is the one I'd argue for in any data product:
 1. **Real data behind the same view** — swap fictional `data.json` for a live source.
-2. **A real backend when — and only when — it's needed:** the move from flat JSON to Postgres/Supabase is justified the moment you need live edits, multi-user, or auth (broker → listings is a clean relational model). Not before — adding a backend to a single-author demo is infrastructure for a problem you don't have.
+2. **A real backend when — and only when — it's needed:** the move from flat JSON to Postgres/Supabase is justified the moment you need live edits, multi-user, or auth. Not before — adding a backend to a single-author demo is infrastructure for a problem you don't have.
 3. **Fit-score calibration against outcomes** — close the loop so the weights are tuned by what actually converted, not just what feels right.
+
+The full forward plan, including what's deliberately *not* being built and why, is in [ROADMAP.md](./ROADMAP.md).
 
 ## Why this write-up exists
 
