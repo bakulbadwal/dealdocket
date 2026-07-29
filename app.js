@@ -25,6 +25,7 @@ async function init() {
   }
   DATA = await res.json();
   DATA.framework.criteria.forEach((c) => (WEIGHTS[c.key] = 20));
+  STABILITY = computeStability();
 
   renderMeta();
   renderThesis();
@@ -163,6 +164,12 @@ function renderControls() {
   });
   document.getElementById("drawerClose").addEventListener("click", closeDrawer);
   document.getElementById("drawerOverlay").addEventListener("click", closeDrawer);
+
+  const drawer = document.getElementById("drawer");
+  drawer.addEventListener("keydown", (e) => trapTab(drawer, e));
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeDrawer();
+  });
 }
 
 function filteredDeals() {
@@ -239,7 +246,7 @@ function renderPipeline() {
           title="${picked ? "Remove from roll-up" : "Add to roll-up"}">${picked ? "&minus;" : "+"}</button>
       </td>
       <td>
-        <span class="deal-name">${d.name}</span>
+        <button type="button" class="deal-name deal-name-btn">${d.name}</button>
         <span class="deal-sub">${d.vertical} · ${d.location}</span>
         <span class="row-note">${d.thesisNote}</span>
       </td>
@@ -251,13 +258,22 @@ function renderPipeline() {
           <div class="score-bar-track"><div class="score-bar-fill ${cls}" style="width:${(score / 5) * 100}%"></div></div>
           <span class="score-num ${cls}">${score.toFixed(1)}</span>
         </div>
+        <span class="stab-mini" title="Share of 2,000 random weightings in which this deal ranks top-5">top-5 in ${STABILITY[d.id].topFivePct.toFixed(0)}% of weightings</span>
       </td>
     `;
     row.querySelector(".pick-btn").addEventListener("click", (e) => {
       e.stopPropagation();
       toggleRollupDeal(d.id);
     });
-    row.addEventListener("click", () => openDrawer(d, score));
+    // The deal name is the real, focusable control. The whole row stays
+    // clickable as a mouse convenience, but keyboard users get one clean
+    // tab stop per deal rather than a non-focusable <tr>.
+    const nameBtn = row.querySelector(".deal-name-btn");
+    nameBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      openDrawer(d, score, nameBtn);
+    });
+    row.addEventListener("click", () => openDrawer(d, score, nameBtn));
     root.appendChild(row);
   });
 }
@@ -329,10 +345,32 @@ function radarSVG(deal) {
   </svg>`;
 }
 
-function openDrawer(deal, score) {
+let drawerReturnTo = null;
+
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input:not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])';
+
+function trapTab(container, e) {
+  if (e.key !== "Tab") return;
+  const f = [...container.querySelectorAll(FOCUSABLE)].filter(
+    (el) => el.offsetWidth > 0 || el.offsetHeight > 0 || el === document.activeElement
+  );
+  if (!f.length) return;
+  const first = f[0], last = f[f.length - 1];
+  if (e.shiftKey && document.activeElement === first) {
+    e.preventDefault();
+    last.focus();
+  } else if (!e.shiftKey && document.activeElement === last) {
+    e.preventDefault();
+    first.focus();
+  }
+}
+
+function openDrawer(deal, score, returnTo) {
   const drawer = document.getElementById("drawer");
   const overlay = document.getElementById("drawerOverlay");
   const body = document.getElementById("drawerBody");
+  drawerReturnTo = returnTo || null;
 
   const critRows = DATA.framework.criteria
     .map((c) => {
@@ -367,17 +405,123 @@ function openDrawer(deal, score) {
       <div><span class="drawer-fin-label">Weighted score</span><span class="drawer-fin-val">${score.toFixed(2)} / 5</span></div>
     </div>
     <div class="drawer-note"><strong>Thesis note:</strong> ${deal.thesisNote}</div>
+
+    <h3 class="drawer-section-head">Rank stability</h3>
+    <p class="stab-intro">Where this deal lands across <strong>2,000 random weightings</strong> of the five
+      criteria — not just the one currently set. A narrow band means the deal is genuinely strong;
+      a wide one means its rank is an artefact of how you happen to be weighting today.</p>
+    ${stabilityBar(STABILITY[deal.id], DATA.deals.length)}
+    <div class="stab-legend">
+      <span>Best <b>#${STABILITY[deal.id].best}</b></span>
+      <span>Median <b>#${STABILITY[deal.id].median}</b></span>
+      <span>Worst <b>#${STABILITY[deal.id].worst}</b></span>
+      <span class="stab-top5">Top-5 in <b>${STABILITY[deal.id].topFivePct.toFixed(0)}%</b></span>
+    </div>
+
     <h3 class="drawer-section-head">Five-box breakdown</h3>
     ${critRows}
   `;
 
   drawer.classList.add("open");
   overlay.classList.add("open");
+  drawer.removeAttribute("inert");
+  drawer.setAttribute("aria-hidden", "false");
+  document.getElementById("drawerClose").focus();
 }
 
 function closeDrawer() {
-  document.getElementById("drawer").classList.remove("open");
+  const drawer = document.getElementById("drawer");
+  if (!drawer.classList.contains("open")) return;
+  drawer.classList.remove("open");
   document.getElementById("drawerOverlay").classList.remove("open");
+  drawer.setAttribute("inert", "");
+  drawer.setAttribute("aria-hidden", "true");
+  if (drawerReturnTo && document.contains(drawerReturnTo)) drawerReturnTo.focus();
+  drawerReturnTo = null;
+}
+
+/* ============================================================
+   Rank stability
+   ============================================================
+   A weighted score is only as good as the weights, and the weights are a
+   judgement call. So the useful question isn't "what ranks first under my
+   current weighting" -- it's "which deals rank well under ALMOST ANY
+   weighting, and which are artefacts of one particular preset".
+
+   Sample uniformly from the weight simplex, rank every deal in each
+   sample, and report the distribution. Deterministic: a fixed seed means
+   the same numbers every load, so the figures are quotable.
+   ============================================================ */
+
+const STABILITY_SAMPLES = 2000;
+const STABILITY_SEED = 20260728;
+let STABILITY = null;
+
+function mulberry32(seed) {
+  let a = seed >>> 0;
+  return function () {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/* Uniform point on the k-simplex: normalise k exponential draws. */
+function randomWeights(rand, keys) {
+  const raw = keys.map(() => -Math.log(1 - rand()));
+  const sum = raw.reduce((a, b) => a + b, 0);
+  const w = {};
+  keys.forEach((k, i) => (w[k] = raw[i] / sum));
+  return w;
+}
+
+function computeStability() {
+  const keys = DATA.framework.criteria.map((c) => c.key);
+  const deals = DATA.deals;
+  const rand = mulberry32(STABILITY_SEED);
+  const ranks = {};
+  deals.forEach((d) => (ranks[d.id] = []));
+
+  const scored = new Array(deals.length);
+  for (let s = 0; s < STABILITY_SAMPLES; s++) {
+    const w = randomWeights(rand, keys);
+    for (let i = 0; i < deals.length; i++) {
+      let v = 0;
+      for (const k of keys) v += w[k] * deals[i].scores[k];
+      scored[i] = { id: deals[i].id, v };
+    }
+    scored.sort((a, b) => b.v - a.v);
+    for (let i = 0; i < scored.length; i++) ranks[scored[i].id].push(i + 1);
+  }
+
+  const pct = (arr, p) => arr[Math.min(arr.length - 1, Math.floor((p / 100) * arr.length))];
+  const out = {};
+  deals.forEach((d) => {
+    const r = ranks[d.id].slice().sort((a, b) => a - b);
+    out[d.id] = {
+      best: r[0],
+      worst: r[r.length - 1],
+      median: pct(r, 50),
+      p10: pct(r, 10),
+      p90: pct(r, 90),
+      topFivePct: (r.filter((x) => x <= 5).length / r.length) * 100,
+    };
+  });
+  return out;
+}
+
+/* Horizontal band: full rank range in the recessive track, p10-p90 solid. */
+function stabilityBar(st, total) {
+  const pos = (r) => ((r - 1) / Math.max(total - 1, 1)) * 100;
+  const left = pos(st.p10);
+  const width = Math.max(pos(st.p90) - left, 1.5);
+  const med = pos(st.median);
+  return `<div class="stab-track" role="img"
+      aria-label="Rank ${st.p10} to ${st.p90} across weightings, median ${st.median} of ${total}">
+      <div class="stab-band" style="left:${left}%;width:${width}%"></div>
+      <div class="stab-median" style="left:${med}%"></div>
+    </div>`;
 }
 
 /* ============================================================

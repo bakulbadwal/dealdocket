@@ -890,3 +890,103 @@ footer {
   .rollup { grid-template-columns: 1fr; }
   .rollup-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* ---- v2: rank stability ---- */
+
+.stab-mini {
+  display: block;
+  margin-top: 5px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--text-dim);
+  letter-spacing: 0.02em;
+}
+
+.stab-intro {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text-dim);
+  margin: 0 0 12px;
+}
+.stab-intro strong { color: var(--text); font-weight: 600; }
+
+.stab-track {
+  position: relative;
+  height: 10px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.stab-band {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: var(--green-soft);
+  border-left: 1px solid var(--green);
+  border-right: 1px solid var(--green);
+}
+.stab-median {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  width: 2px;
+  background: var(--green);
+}
+
+.stab-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+}
+.stab-legend b { color: var(--text); font-weight: 600; }
+.stab-top5 { margin-left: auto; }
+.stab-top5 b { color: var(--green); }
+
+/* ---- v2: accessibility ---- */
+
+.skiplink {
+  position: fixed;
+  left: 12px;
+  top: -60px;
+  z-index: 3000;
+  background: var(--green);
+  color: var(--bg);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 9px 16px;
+  text-decoration: none;
+  transition: top 0.15s ease;
+}
+.skiplink:focus { top: 12px; }
+
+/* The deal name is a real button now -- strip the UA styling, keep the look. */
+.deal-name-btn {
+  font: inherit;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--text);
+  background: none;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+}
+.deal-name-btn:hover { color: var(--green); }
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+  border-radius: 1px;
+}

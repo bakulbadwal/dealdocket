@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<a class="skiplink" href="#pipelineRoot">Skip to the pipeline</a>
 <div class="wrap" id="app">
   <header>
     <div>
@@ -105,7 +106,7 @@
     </select>
   </div>
 
-  <div class="stats-row" id="statsRoot"></div>
+  <div class="stats-row" id="statsRoot" aria-live="polite"></div>
 
   <table class="pipeline-table">
     <thead>
@@ -127,8 +128,8 @@
 </div>
 
 <div class="drawer-overlay" id="drawerOverlay"></div>
-<div class="drawer" id="drawer">
-  <button class="drawer-close" id="drawerClose">&times;</button>
+<div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Deal detail" aria-hidden="true" inert>
+  <button type="button" class="drawer-close" id="drawerClose" aria-label="Close deal detail">&times;</button>
   <div id="drawerBody"></div>
 </div>
 
