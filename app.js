@@ -377,6 +377,21 @@ function trapTab(container, e) {
   }
 }
 
+function verticalBasisNote(vertical) {
+  const ctx = DATA.verticalContext[vertical];
+  const sourced = ctx.basis === "sourced";
+  const detail = sourced
+    ? `payroll is ${ctx.derivation.payrollShareOfRevenuePct}% of revenue (Census SAS 2022, NAICS ` +
+      `${ctx.derivation.naicsProxy.split(" ")[0]} as proxy) and ${ctx.derivation.exposedShareOfPayrollPct}% ` +
+      `of that payroll is in LLM-exposed tasks (BLS OEWS May 2025 × Eloundou et al.). Was ${ctx.derivation.priorEstimate}% as an estimate.`
+    : `<strong>author's assumption</strong>, not yet sourced. ${ctx.assumptionNote}`;
+  return `<div class="drawer-basis basis-${sourced ? "sourced" : "assumption"}">
+      <span class="drawer-basis-tag">${sourced ? "Sourced" : "Assumption"}</span>
+      Automatable cost for ${vertical}: <b>${ctx.automatableCostShare}%</b> of revenue — ${detail}
+      <a class="sources-link" href="${DATA.meta.sourcesUrl}" target="_blank" rel="noopener">Sources</a>
+    </div>`;
+}
+
 function openDrawer(deal, score, returnTo) {
   const drawer = document.getElementById("drawer");
   const overlay = document.getElementById("drawerOverlay");
@@ -416,6 +431,7 @@ function openDrawer(deal, score, returnTo) {
       <div><span class="drawer-fin-label">Weighted score</span><span class="drawer-fin-val">${score.toFixed(2)} / 5</span></div>
     </div>
     <div class="drawer-note"><strong>Thesis note:</strong> ${deal.thesisNote}</div>
+    ${verticalBasisNote(deal.vertical)}
 
     <h3 class="drawer-section-head">Rank stability</h3>
     <p class="stab-intro">Where this deal lands across <strong>2,000 random weightings</strong> of the five
@@ -897,9 +913,12 @@ function renderRollup() {
 
   const shares = r.sel.map((d) => DATA.verticalContext[d.vertical].automatableCostShare);
   const lo = Math.min(...shares), hi = Math.max(...shares);
-  document.getElementById("captureDesc").textContent =
+  const captureDesc = document.getElementById("captureDesc");
+  captureDesc.textContent =
     "Automatable cost base " + (lo === hi ? lo + "%" : lo + "–" + hi + "%") +
-    " of revenue across the selection, scaled by each asset's AI-leverage score.";
+    " of revenue across the selection, scaled by each asset's AI-leverage score. " +
+    basisSummary(r.sel) + " ";
+  captureDesc.appendChild(sourcesLink());
 
   const arbShare = (r.arbitrage / (r.exitValue - r.entryPrice)) * 100;
   const aiShare = (r.aiValue / (r.exitValue - r.entryPrice)) * 100;
@@ -935,6 +954,31 @@ function renderRollup() {
       the honest reason this structure is attractive.</p>
     </div>
   `;
+}
+
+/* The automatable-cost share is the model's least certain input, so the UI
+   says next to it which verticals are sourced and which are still the
+   author's assumption -- the data carries `basis` for exactly this. */
+function basisSummary(sel) {
+  const verticals = [...new Set(sel.map((d) => d.vertical))];
+  const sourced = verticals.filter((v) => DATA.verticalContext[v].basis === "sourced");
+  const assumed = verticals.filter((v) => DATA.verticalContext[v].basis !== "sourced");
+  if (!assumed.length) return "Sourced: Census payroll ÷ revenue × LLM task exposure.";
+  if (!sourced.length) {
+    return (assumed.length === 1 ? "This share is" : "These shares are") +
+      " the author's assumption, not a sourced figure.";
+  }
+  return "Sourced for " + sourced.join(", ") + "; author's assumption for " + assumed.join(", ") + ".";
+}
+
+function sourcesLink() {
+  const a = document.createElement("a");
+  a.href = DATA.meta.sourcesUrl;
+  a.target = "_blank";
+  a.rel = "noopener";
+  a.className = "sources-link";
+  a.textContent = "Sources";
+  return a;
 }
 
 function wireRollup() {

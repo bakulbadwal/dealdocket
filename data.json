@@ -3,7 +3,8 @@
     "title": "Deal Docket",
     "subtitle": "AI-enabled service roll-ups · five-box thesis screen · illustrative pipeline",
     "asOf": "July 2026",
-    "disclaimer": "Every company, financial figure, and deal note below is fictional — built to demonstrate a sourcing/screening framework, not to represent real targets, real data, or any employer's actual pipeline or thesis."
+    "disclaimer": "Every company, financial figure, and deal note below is fictional — built to demonstrate a sourcing/screening framework, not to represent real targets, real data, or any employer's actual pipeline or thesis.",
+    "sourcesUrl": "https://github.com/bakulbadwal/dealdocket/blob/main/SOURCES.md"
   },
   "thesis": {
     "headline": "Where PE actually fits in the AI stack isn't the labs — it's the fragmented, already-profitable service businesses that can use AI to expand margin on a cash-flow base that already exists.",
@@ -975,74 +976,102 @@
   ],
   "verticalContext": {
     "IT Managed Services": {
-      "automatableCostShare": 18,
+      "automatableCostShare": 20,
       "automatableNote": "Tier-1 ticket triage, patch management, monitoring escalation.",
-      "basis": "estimate",
-      "source": null,
-      "asOf": null
+      "basis": "sourced",
+      "source": "Census Service Annual Survey 2022 (payroll ÷ revenue, NAICS 5415) × share of that payroll in LLM-exposed tasks (Eloundou et al., Science 2024, weighted by BLS OEWS May 2025 staffing for NAICS 5415). See SOURCES.md.",
+      "asOf": "2022 payroll and revenue; May 2025 staffing",
+      "derivation": {
+        "naicsProxy": "5415 Computer Systems Design and Related Services",
+        "payrollShareOfRevenuePct": 40.2,
+        "exposedShareOfPayrollPct": 50.5,
+        "result": "40.2% × 50.5% = 20.3% → 20",
+        "priorEstimate": 18
+      }
     },
     "Bookkeeping & Accounting": {
-      "automatableCostShare": 24,
+      "automatableCostShare": 22,
       "automatableNote": "Transaction categorisation, reconciliation, month-end close prep.",
-      "basis": "estimate",
-      "source": null,
-      "asOf": null
+      "basis": "sourced",
+      "source": "Census Service Annual Survey 2022 (payroll ÷ revenue, NAICS 5412) × share of that payroll in LLM-exposed tasks (Eloundou et al., Science 2024, weighted by BLS OEWS May 2025 staffing for NAICS 5412). See SOURCES.md.",
+      "asOf": "2022 payroll and revenue; May 2025 staffing",
+      "derivation": {
+        "naicsProxy": "5412 Accounting, Tax Preparation, Bookkeeping, and Payroll Services",
+        "payrollShareOfRevenuePct": 43.9,
+        "exposedShareOfPayrollPct": 49.5,
+        "result": "43.9% × 49.5% = 21.7% → 22",
+        "priorEstimate": 24
+      }
     },
     "Marketing & Creative Agencies": {
       "automatableCostShare": 15,
       "automatableNote": "Asset variation, copy drafting, reporting packs.",
-      "basis": "estimate",
+      "basis": "assumption",
       "source": null,
-      "asOf": null
+      "asOf": null,
+      "assumptionNote": "53% of NAICS 5418 payroll is in LLM-exposed tasks, but no citable payroll-to-revenue ratio was retrievable; 15% implies payroll ≈ 28% of revenue."
     },
     "Home Services": {
       "automatableCostShare": 8,
       "automatableNote": "Dispatch, scheduling, intake calls. The work itself stays physical.",
-      "basis": "estimate",
+      "basis": "assumption",
       "source": null,
-      "asOf": null
+      "asOf": null,
+      "assumptionNote": "NAICS 238220 staffing puts only 21% of payroll in LLM-exposed tasks; 8% implies payroll ≈ 38% of revenue. Construction is outside the Service Annual Survey, so the payroll ratio needs the Economic Census."
     },
     "Staffing & Recruiting": {
       "automatableCostShare": 16,
       "automatableNote": "Sourcing, resume screening, first-pass qualification.",
-      "basis": "estimate",
+      "basis": "assumption",
       "source": null,
-      "asOf": null
+      "asOf": null,
+      "assumptionNote": "34% of NAICS 5613 payroll is in LLM-exposed tasks; 16% implies payroll ≈ 47% of revenue. No citable payroll-to-revenue ratio retrieved."
     },
     "Legal Back-Office": {
-      "automatableCostShare": 26,
+      "automatableCostShare": 19,
       "automatableNote": "Document review, intake, standard drafting.",
-      "basis": "estimate",
-      "source": null,
-      "asOf": null
+      "basis": "sourced",
+      "source": "Census Service Annual Survey 2022 (payroll ÷ revenue, NAICS 5411) × share of that payroll in LLM-exposed tasks (Eloundou et al., Science 2024, weighted by BLS OEWS May 2025 staffing for NAICS 5411). See SOURCES.md.",
+      "asOf": "2022 payroll and revenue; May 2025 staffing",
+      "derivation": {
+        "naicsProxy": "5411 Legal Services",
+        "payrollShareOfRevenuePct": 37.7,
+        "exposedShareOfPayrollPct": 49.1,
+        "result": "37.7% × 49.1% = 18.5% → 19",
+        "priorEstimate": 26
+      }
     },
     "Medical Billing / RCM": {
       "automatableCostShare": 28,
       "automatableNote": "Claim scrubbing, coding suggestion, denial triage.",
-      "basis": "estimate",
+      "basis": "assumption",
       "source": null,
-      "asOf": null
+      "asOf": null,
+      "assumptionNote": "Billing offices sit in NAICS 541219 (inside 5412); applying the 5412 inputs would give 22%, but that staffing mix is CPA-heavy, so it is not used. 28% implies payroll ≈ 57% of revenue."
     },
     "Logistics & Dispatch": {
       "automatableCostShare": 13,
       "automatableNote": "Route optimisation, track-and-trace, exception handling.",
-      "basis": "estimate",
+      "basis": "assumption",
       "source": null,
-      "asOf": null
+      "asOf": null,
+      "assumptionNote": "Likely high for brokerage-style firms: freight arrangement (NAICS 4885) revenue includes purchased transport, so payroll is a small share of it. 43% of payroll is LLM-exposed; 13% implies payroll ≈ 30% of revenue."
     },
     "Customer Support / BPO": {
       "automatableCostShare": 32,
       "automatableNote": "Tier-1 deflection and assisted resolution.",
-      "basis": "estimate",
+      "basis": "assumption",
       "source": null,
-      "asOf": null
+      "asOf": null,
+      "assumptionNote": "53% of NAICS 5614 payroll is LLM-exposed; 32% implies payroll ≈ 60% of revenue, plausible for contact centres but not yet cited."
     },
     "Property Management": {
       "automatableCostShare": 15,
       "automatableNote": "Maintenance coordination, tenant comms, renewal admin.",
-      "basis": "estimate",
+      "basis": "assumption",
       "source": null,
-      "asOf": null
+      "asOf": null,
+      "assumptionNote": "38% of NAICS 531 payroll is LLM-exposed; 15% implies payroll ≈ 40% of revenue. No citable payroll-to-revenue ratio retrieved."
     }
   },
   "rollupModel": {

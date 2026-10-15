@@ -303,6 +303,11 @@ h1 {
 
 /* ---------- pipeline table ---------- */
 
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .pipeline-table {
   width: 100%;
   border-collapse: collapse;
@@ -552,6 +557,38 @@ h1 {
   margin-bottom: 20px;
   color: var(--text);
   background: var(--panel-2);
+}
+
+/* Which inputs are cited and which are the author's guess -- amber for the
+   latter, so an assumption never reads as a finding. */
+.drawer-basis {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text-dim);
+  border: 1px dashed var(--line-bright);
+  padding: 10px 12px;
+  margin: -8px 0 20px;
+}
+.drawer-basis b { color: var(--text); }
+.drawer-basis-tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 1px 6px;
+  margin-right: 6px;
+  border: 1px solid currentColor;
+}
+.basis-sourced .drawer-basis-tag { color: var(--green); }
+.basis-assumption .drawer-basis-tag,
+.basis-assumption strong { color: var(--amber); }
+
+.sources-link {
+  color: var(--green);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space: nowrap;
 }
 
 .drawer-section-head {
