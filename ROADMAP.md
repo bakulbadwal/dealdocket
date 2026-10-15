@@ -2,36 +2,36 @@
 
 What this tool doesn't do yet, why, and what it would take. Kept in the repo rather than in my head, because the decision *not* to build something is usually more interesting than a feature list.
 
-Status: **July 2026.** Forward-looking only — shipped work is in the [commit history](https://github.com/bakulbadwal/dealdocket/commits/main).
+Status: **October 2026.** Forward-looking only — shipped work is in the [commit history](https://github.com/bakulbadwal/dealdocket/commits/main).
 
 ---
 
-## The known soft spot: unsourced automatable-cost estimates
+## The known soft spot: automatable-cost estimates (partly sourced)
 
-**This is the honest weakness in the current build, and it's deliberate.**
+The roll-up builder's AI margin uplift is driven by a per-vertical `automatableCostShare`, the share of revenue that is cost AI could plausibly absorb. Until October 2026 all ten values were my estimates, tagged `"basis": "estimate"` with no source.
 
-The roll-up builder's AI margin uplift is driven by a per-vertical `automatableCostShare` — the share of revenue representing cost that AI could plausibly absorb. Bookkeeping is set at 24%, home services at 8%, customer support at 32%, and so on.
+**Sourcing pass 1 (October 2026): done for three verticals, as the pattern.** See [SOURCES.md](./SOURCES.md) for every figure, its source and how it was checked.
 
-**Those numbers are my estimates, not researched figures.** Each is tagged `"basis": "estimate"` in `data.json` with `source: null` and `asOf: null`, so the data never pretends otherwise. Being transparent about the model's weakest input is the minimum bar — it isn't the same as being right.
+- [x] **Method fixed**: payroll ÷ revenue (Census Service Annual Survey 2022) × share of that payroll in LLM-exposed tasks (BLS OEWS May 2025 staffing × Eloundou et al. exposure scores).
+- [x] **Bookkeeping & Accounting** 24% → **22%** (NAICS 5412).
+- [x] **IT Managed Services** 18% → **20%** (NAICS 5415).
+- [x] **Legal Back-Office** 26% → **19%** (NAICS 5411). This is the biggest correction: the sourced industry payroll is lawyer-heavy, not support-heavy.
+- [x] **The other seven are relabelled `"basis": "assumption"`**, and the UI says so next to the capture slider and in each deal drawer. SOURCES.md records each one's sourced exposure half and the payroll share it implies. Logistics (13%) is flagged as probably high.
+- [ ] Payroll ÷ revenue for the remaining seven. The SAS series exist for most; Home Services (238220) needs the 2022 Economic Census.
+- [ ] Tighter proxies. NAICS 4-digit staffing is a proxy for each niche (e.g. 5415 is software-developer-heavy, while an MSP is support-technician-heavy). The 6-digit OEWS or SUSB cuts would sharpen this.
 
 ### What "done" looks like
 
-Replace each estimate with a sourced, dated figure and flip `basis` to `"sourced"`:
+| Field | Status | What it needs |
+|---|---|---|
+| `automatableCostShare` | **3 of 10 sourced** | The same decomposition for the other seven verticals, cited, with an `asOf` date |
+| `firmCount` / fragmentation | Not started | US establishment and firm counts from Census CBP 2023 / SUSB 2022. The exact API query is in SOURCES.md. Census was unreachable from the build environment, and I didn't add third-party re-quotes. |
+| `marginRange` | Not started | Observed EBITDA margin bands for the vertical, not assumed |
+| `consolidationActivity` | Not started | Actual sponsor platform/add-on activity: evidence the roll-up is already happening, or isn't |
 
-| Field | What it needs |
-|---|---|
-| `automatableCostShare` | A defensible labour-cost decomposition per vertical, cited, with an `asOf` date |
-| `firmCount` / fragmentation | US establishment counts — Census County Business Patterns is the obvious spine |
-| `marginRange` | Observed EBITDA margin bands for the vertical, not assumed |
-| `consolidationActivity` | Actual sponsor platform/add-on activity — evidence the roll-up is already happening, or isn't |
+### Why the rest is deferred rather than dropped
 
-Ten verticals × four fields, each cited. That's research, not a coding task, which is exactly why it hasn't happened in a build session.
-
-### Why it's deferred rather than dropped
-
-The estimates are directionally defensible and the model is explicit about them. Sourcing them properly would make the tool's central claim *evidentiary* rather than *illustrative* — a real upgrade — but it doesn't change the architecture, and the value bridge is arithmetically sound regardless of which numbers go in. Correctness of structure first; correctness of inputs second.
-
-**First step if picked up:** do three verticals fully as the pattern, ship, then extend. Don't attempt ten in one sitting.
+The value bridge is arithmetically sound whatever numbers go in, and the model now labels which inputs are evidence and which are mine. Sourcing the rest would make the tool's central claim *evidentiary* rather than *illustrative* across the board. It doesn't change the architecture.
 
 ### The unlock it enables
 

@@ -37,13 +37,19 @@ The visual language is deliberately terminal-inspired — monospace numerals, ha
 ## Reading further
 
 - **[CASE_STUDY.md](./CASE_STUDY.md)** — the product write-up: the problem being modelled, who it's for, the decisions and tradeoffs, and how I'd measure whether it works.
-- **[ROADMAP.md](./ROADMAP.md)** — what this doesn't do yet and why, including the honest weak spot (the automatable-cost estimates driving the AI uplift are mine, not researched — and are tagged as such in the data), plus what's deliberately *not* being built.
+- **[SOURCES.md](./SOURCES.md)** — where every real-world figure comes from, how it was checked, and which ones are still my assumptions.
+- **[ROADMAP.md](./ROADMAP.md)** — what this doesn't do yet and why, including the honest weak spot (3 of the 10 automatable-cost shares driving the AI uplift are now sourced; the other 7 are still my assumptions and labelled as such), plus what's deliberately *not* being built.
 
 ## A note on the numbers
 
 Financials are stored as numbers, not display strings, so every figure on the page is computed rather than written down. Entry multiples are a deterministic function of deal size and the moat/exit-path scores — reproducible, not random. The margin is derived from revenue and EBITDA at render time so it cannot drift out of sync with them.
 
-The one input that is *not* derived is `automatableCostShare` per vertical, which drives the AI uplift. Those are estimates, marked `"basis": "estimate"` in `data.json` with a null source. See the roadmap.
+The one real-world input is `automatableCostShare` per vertical, which drives the AI uplift. Where sourced, it is computed as payroll ÷ revenue × the share of that payroll in LLM-exposed tasks.
+
+- **Sourced (3 of 10):** Bookkeeping & Accounting (22%), IT Managed Services (20%) and Legal Back-Office (19%). These use Census Service Annual Survey 2022 payroll and revenue, BLS OEWS May 2025 staffing patterns, and the Eloundou et al. (*Science*, 2024) exposure scores. Each is marked `"basis": "sourced"` in `data.json`, with its derivation.
+- **Assumptions (7 of 10):** the other verticals are still my estimates, marked `"basis": "assumption"`. The app labels them as assumptions next to the capture slider and in the deal drawer, so they never read as findings.
+
+See [SOURCES.md](./SOURCES.md) for every figure, the caveats, and how it was verified.
 
 ## Architecture
 
