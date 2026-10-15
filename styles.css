@@ -303,6 +303,11 @@ h1 {
 
 /* ---------- pipeline table ---------- */
 
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .pipeline-table {
   width: 100%;
   border-collapse: collapse;
